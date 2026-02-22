@@ -34,12 +34,14 @@ textarea { resize: vertical; }
 .chip { border: 1px solid var(--border); border-radius: 999px; background: #fff; padding: .42rem .72rem; font-weight: 700; color: var(--muted); }
 .chip.is-active { background: #111827; color: #fff; border-color: #111827; }
 
-.custom-bouquet-block { border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); padding: 1rem; margin-bottom: 1rem; }
+.custom-bouquet-block { position: relative; isolation: isolate; border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); padding: 1rem; margin-bottom: 1rem; }
 .custom-bouquet-block h3 { margin: 0; line-height: 1.15; font-size: 1.18rem; font-weight: 800; }
 .custom-bouquet-block p { margin: .48rem 0 0; color: var(--muted); line-height: 1.5; }
 .custom-bouquet-actions { margin-top: .8rem; display: grid; gap: .5rem; }
 .custom-bouquet-block h3,
-.custom-bouquet-block p { text-shadow: none; filter: none; }
+.custom-bouquet-block p { text-shadow: none; filter: none; position: relative; z-index: 1; }
+.custom-bouquet-block::before,
+.custom-bouquet-block::after { content: none !important; }
 
 .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .72rem; }
 .card { background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; transition: transform .16s ease, box-shadow .16s ease; }

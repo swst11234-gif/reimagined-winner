@@ -108,7 +108,7 @@ function getTelegramLink() {
   return `https://t.me/${CONFIG.telegramUsernameOrLink.replace("@", "")}`;
 }
 function getSelection(productId) {
-  if (!state.selectionById[productId]) state.selectionById[productId] = { color: "white", wrapMode: "wrap" };
+  if (!state.selectionById[productId]) state.selectionById[productId] = { color: "white", wrapMode: "nowrap" };
   return state.selectionById[productId];
 }
 function getColorMeta(colorKey) {
