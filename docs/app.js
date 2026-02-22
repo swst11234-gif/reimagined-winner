@@ -13,7 +13,7 @@ const CONFIG = {
 const COLOR_OPTIONS = [
   { key: "white", name: "Белый", swatch: "#FFFFFF", border: true },
   { key: "red", name: "Красный", swatch: "#D11A2A" },
-  { key: "pink_center", name: "Розовый с белым центром", swatch: "radial-gradient(circle at 45% 45%, #FFFFFF 0 35%, #FF5AA5 36% 100%)" },
+  { key: "pink_center", name: "Розовый с белым центром", swatch: "#FF5AA5" },
   { key: "pink", name: "Розовый", swatch: "#FF5AA5" },
   { key: "yellow", name: "Жёлтый", swatch: "#F7C948" },
   { key: "purple", name: "Фиолетовый", swatch: "#6D28D9" },
@@ -145,6 +145,7 @@ function renderSwatches(container, selection, onSelect) {
     if (selection.color === color.key) button.classList.add("is-selected");
     button.setAttribute("aria-label", `Цвет: ${color.name}`);
     button.style.background = color.swatch;
+    button.dataset.colorKey = color.key;
     if (color.border) button.style.borderColor = "#D0D0D0";
     button.addEventListener("click", () => onSelect(color.key));
     container.appendChild(button);

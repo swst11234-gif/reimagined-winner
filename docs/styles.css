@@ -54,6 +54,22 @@ input, select { width: 100%; margin-top: .35rem; border: 1px solid var(--border)
 .swatch:focus-visible { outline: 2px solid #111827; outline-offset: 2px; }
 .swatch.is-selected { border: 2px solid #111827; box-shadow: 0 0 0 2px rgba(17,24,39,.12); }
 
+.swatch[data-color-key="pink_center"] {
+  position: relative;
+  background: #FF5AA5 !important;
+}
+.swatch[data-color-key="pink_center"]::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .segment { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 999px; padding: 2px; gap: 2px; }
 .segment button { border: 0; border-radius: 999px; font: inherit; font-size: .79rem; padding: .45rem .4rem; background: #f3f4f6; color: #111827; cursor: pointer; }
 .segment button:hover { filter: brightness(.97); }
