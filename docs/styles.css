@@ -36,7 +36,7 @@ textarea { resize: vertical; }
 
 .custom-bouquet-block { border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); padding: 1rem; margin-bottom: 1rem; }
 .custom-bouquet-block h3 { margin: 0 0 .45rem; }
-.custom-bouquet-block p { margin: 0; color: var(--muted); }
+.custom-bouquet-block p { margin: 0; color: var(--muted); line-height: 1.45; }
 .custom-bouquet-actions { margin-top: .8rem; display: grid; gap: .5rem; }
 
 .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .72rem; }
@@ -127,6 +127,24 @@ textarea { resize: vertical; }
 .wizard-progress-bar { height: 8px; background: #f1f1f1; border-radius: 999px; overflow: hidden; }
 .wizard-progress-bar span { display: block; height: 100%; background: #111827; width: 0; transition: width .2s ease; }
 .wizard-actions { margin-top: .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+
+
+.wizard-final { margin-top: .9rem; }
+#wizard-preview { min-height: 160px; line-height: 1.45; }
+.wizard-contact-actions { margin-top: .7rem; display: grid; gap: .5rem; }
+.wizard-hint { margin: .5rem 0 0; line-height: 1.4; }
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  background: #111827;
+  color: #fff;
+  padding: .6rem .85rem;
+  border-radius: 10px;
+  z-index: 50;
+  font-size: .9rem;
+}
 
 @media (min-width: 760px) {
   .filters { grid-template-columns: 2fr 2fr 1.2fr; align-items: end; }

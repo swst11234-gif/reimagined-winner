@@ -20,19 +20,11 @@ const COLOR_OPTIONS = [
 ];
 
 const WIZARD_STEPS = [
-  { key: "forWhom", question: "Для кого выбираете букет?", type: "text", placeholder: "Например: для мамы" },
-  { key: "occasion", question: "По какому поводу будете дарить?", type: "text", placeholder: "Например: день рождения" },
-  { key: "flowers", question: "Любимые цветы или цветовая гамма?", type: "textarea", placeholder: "Например: нежные, пастельные" },
-  { key: "budget", question: "Примерный бюджет заказа", type: "text", placeholder: "Например: 3000-5000 ₽" },
-  { key: "name", question: "Ваше имя", type: "text", placeholder: "Как к вам обращаться" },
-  {
-    key: "contactMethod",
-    question: "Как удобнее получить подборку?",
-    type: "select",
-    options: ["Телефон", "Telegram", "WhatsApp"],
-  },
-  { key: "phone", question: "Номер телефона", type: "text", placeholder: "+7 ..." },
-  { key: "telegram", question: "Если не хотите звонок — ник Telegram", type: "text", placeholder: "@username" },
+  { key: "forWhom", question: "Для кого букет?", type: "text", placeholder: "Например: для мамы" },
+  { key: "occasion", question: "Повод", type: "text", placeholder: "Например: день рождения" },
+  { key: "palette", question: "Цветы или цветовая гамма", type: "textarea", placeholder: "Например: нежные, пастельные" },
+  { key: "budget", question: "Бюджет", type: "select", options: ["До 2000 ₽", "2000–4000 ₽", "4000–7000 ₽", "7000+ ₽"] },
+  { key: "wishes", question: "Пожелания (опционально)", type: "textarea", placeholder: "Упаковка, открытка, лента, доставка..." },
 ];
 
 const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
@@ -43,10 +35,7 @@ const state = {
   selectionById: {},
   filters: { search: "", price: "all", category: "all" },
   pendingMessage: "",
-  wizard: {
-    step: 0,
-    answers: {},
-  },
+  wizard: { step: 0, answers: {}, finalMode: false },
 };
 
 const el = {
@@ -82,11 +71,19 @@ const el = {
   wizardProgress: document.getElementById("wizard-progress"),
   wizardProgressFill: document.getElementById("wizard-progress-bar-fill"),
   wizardQuestion: document.getElementById("wizard-question"),
+  wizardInputWrap: document.getElementById("wizard-input-wrap"),
   wizardInput: document.getElementById("wizard-input"),
   wizardTextarea: document.getElementById("wizard-textarea"),
   wizardSelect: document.getElementById("wizard-select"),
   wizardSkip: document.getElementById("wizard-skip"),
   wizardNext: document.getElementById("wizard-next"),
+  wizardFinal: document.getElementById("wizard-final"),
+  wizardPreview: document.getElementById("wizard-preview"),
+  wizardCopy: document.getElementById("wizard-copy"),
+  wizardHint: document.getElementById("wizard-hint"),
+  wizardTelegram: document.getElementById("wizard-telegram"),
+  wizardWhatsapp: document.getElementById("wizard-whatsapp"),
+  wizardCall: document.getElementById("wizard-call"),
 
   messengerModal: document.getElementById("messenger-modal"),
   messengerTitle: document.getElementById("messenger-title"),
@@ -95,44 +92,56 @@ const el = {
   messengerTelegram: document.getElementById("messenger-telegram"),
   messengerWhatsapp: document.getElementById("messenger-whatsapp"),
   messengerCall: document.getElementById("messenger-call"),
+
+  toast: document.getElementById("toast"),
 };
 
 function formatPrice(value) {
   return `${new Intl.NumberFormat("ru-RU").format(value)} ${CONFIG.currency}`;
 }
-
 function normalizeImagePath(path) {
   if (!path) return PLACEHOLDER_IMAGE;
   return encodeURI(String(path).trim().replace(/\\/g, "/"));
 }
-
 function getTelegramLink() {
   if (CONFIG.telegramUsernameOrLink.startsWith("http")) return CONFIG.telegramUsernameOrLink;
   return `https://t.me/${CONFIG.telegramUsernameOrLink.replace("@", "")}`;
 }
-
 function getSelection(productId) {
   if (!state.selectionById[productId]) state.selectionById[productId] = { color: "white", wrapMode: "wrap" };
   return state.selectionById[productId];
 }
-
 function getColorMeta(colorKey) {
   return COLOR_OPTIONS.find((c) => c.key === colorKey) || COLOR_OPTIONS[0];
 }
-
 function getCurrentPrice(product, selection) {
   return selection.wrapMode === "nowrap" ? Math.max(product.price - WRAP_DISCOUNT, 0) : product.price;
 }
-
 function resolveImage(product, selection) {
   return product.images?.[selection.color]?.[selection.wrapMode] || PLACEHOLDER_IMAGE;
+}
+
+function showToast(text) {
+  el.toast.textContent = text;
+  el.toast.classList.remove("hidden");
+  setTimeout(() => el.toast.classList.add("hidden"), 1600);
+}
+
+async function copyText(text, notify = true) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (notify) showToast("Текст заявки скопирован");
+    return true;
+  } catch {
+    if (notify) showToast("Не удалось скопировать — используйте кнопку «Скопировать текст»");
+    return false;
+  }
 }
 
 function updateImageWithFade(img, hintNode, srcPath) {
   const finalSrc = normalizeImagePath(srcPath);
   const fallbackSrc = normalizeImagePath(PLACEHOLDER_IMAGE);
   img.style.opacity = "0";
-
   const temp = new Image();
   temp.onload = () => {
     img.src = finalSrc;
@@ -156,17 +165,14 @@ function makeOrderText(product, selection) {
 
 function makeWizardRequestText() {
   const a = state.wizard.answers;
-  return [
-    "Заявка на индивидуальный букет:",
-    `Для кого: ${a.forWhom || "—"}`,
-    `Повод: ${a.occasion || "—"}`,
-    `Цветы/цвет: ${a.flowers || "—"}`,
-    `Бюджет: ${a.budget || "—"}`,
-    `Имя: ${a.name || "—"}`,
-    `Способ связи: ${a.contactMethod || "—"}`,
-    `Телефон: ${a.phone || "—"}`,
-    `Telegram: ${a.telegram || "—"}`,
-  ].join("\n");
+  const lines = ["Здравствуйте! Хочу индивидуальный букет."];
+  if (a.forWhom) lines.push(`Для кого: ${a.forWhom}`);
+  if (a.occasion) lines.push(`Повод: ${a.occasion}`);
+  if (a.palette) lines.push(`Цветы/гамма: ${a.palette}`);
+  if (a.budget) lines.push(`Бюджет: ${a.budget}`);
+  if (a.wishes) lines.push(`Пожелания: ${a.wishes}`);
+  lines.push("Спасибо!");
+  return lines.join("\n");
 }
 
 function renderHeader() {
@@ -300,8 +306,14 @@ function renderModal() {
     renderModal();
     renderCatalog();
   });
-
   applySegmentState(el.modalWrapToggle, selection.wrapMode);
+}
+
+function openMessengerChoice(title, description, message = "Здравствуйте!") {
+  state.pendingMessage = message;
+  el.messengerTitle.textContent = title;
+  el.messengerDescription.textContent = description;
+  el.messengerModal.showModal();
 }
 
 function openMessenger(kind) {
@@ -311,21 +323,14 @@ function openMessenger(kind) {
     telegram: `${getTelegramLink()}?text=${text}`,
     call: CONFIG.callLink,
   };
-
   window.open(links[kind], "_blank", "noopener");
   el.messengerModal.close();
-}
-
-function openMessengerChoice(title, description, message) {
-  state.pendingMessage = message || "Здравствуйте!";
-  el.messengerTitle.textContent = title;
-  el.messengerDescription.textContent = description || "";
-  el.messengerModal.showModal();
 }
 
 function resetWizard() {
   state.wizard.step = 0;
   state.wizard.answers = {};
+  state.wizard.finalMode = false;
 }
 
 function readWizardValue(step) {
@@ -354,14 +359,14 @@ function fillWizardField(step) {
   }
 
   if (step.type === "textarea") {
-    el.wizardTextarea.placeholder = step.placeholder || "Введите ответ";
     el.wizardTextarea.value = value;
+    el.wizardTextarea.placeholder = step.placeholder || "Введите ответ";
     el.wizardTextarea.focus();
     return;
   }
 
-  el.wizardInput.placeholder = step.placeholder || "Введите ответ";
   el.wizardInput.value = value;
+  el.wizardInput.placeholder = step.placeholder || "Введите ответ";
   el.wizardInput.focus();
 }
 
@@ -369,29 +374,34 @@ function renderWizardStep() {
   const step = WIZARD_STEPS[state.wizard.step];
   const index = state.wizard.step + 1;
   const total = WIZARD_STEPS.length;
+  const finalMode = state.wizard.finalMode;
+
+  el.wizardFinal.classList.toggle("hidden", !finalMode);
+  el.wizardInputWrap.classList.toggle("hidden", finalMode);
+  el.wizardQuestion.classList.toggle("hidden", finalMode);
+  el.wizardSkip.classList.toggle("hidden", finalMode);
+  el.wizardNext.classList.toggle("hidden", finalMode);
+
+  if (finalMode) {
+    el.wizardProgress.textContent = "Готово";
+    el.wizardProgressFill.style.width = "100%";
+    el.wizardPreview.value = makeWizardRequestText();
+    return;
+  }
 
   el.wizardProgress.textContent = `Шаг ${index} из ${total}`;
   el.wizardProgressFill.style.width = `${(index / total) * 100}%`;
   el.wizardQuestion.textContent = step.question;
-  el.wizardNext.textContent = index === total ? "Отправить запрос" : "Далее";
   fillWizardField(step);
 }
 
 function nextWizardStep(skip = false) {
   const step = WIZARD_STEPS[state.wizard.step];
-  if (!skip) {
-    state.wizard.answers[step.key] = readWizardValue(step);
-  }
+  if (!skip) state.wizard.answers[step.key] = readWizardValue(step);
 
-  const isLast = state.wizard.step === WIZARD_STEPS.length - 1;
-  if (isLast) {
-    const requestText = makeWizardRequestText();
-    el.wizardModal.close();
-    openMessengerChoice(
-      "Куда отправить заявку?",
-      "Выберите удобный канал, чтобы отправить запрос на индивидуальный букет.",
-      requestText,
-    );
+  if (state.wizard.step === WIZARD_STEPS.length - 1) {
+    state.wizard.finalMode = true;
+    renderWizardStep();
     return;
   }
 
@@ -401,6 +411,7 @@ function nextWizardStep(skip = false) {
 
 function startWizard() {
   resetWizard();
+  el.wizardHint.textContent = "";
   renderWizardStep();
   el.wizardModal.showModal();
 }
@@ -408,15 +419,29 @@ function startWizard() {
 async function copyOrderText() {
   if (!state.currentProduct) return;
   const text = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
-  try {
-    await navigator.clipboard.writeText(text);
-    el.copyButton.textContent = "Текст скопирован";
-    setTimeout(() => {
-      el.copyButton.textContent = "Скопировать текст заказа";
-    }, 1200);
-  } catch {
-    el.copyButton.textContent = "Скопируйте вручную";
+  const ok = await copyText(text, false);
+  el.copyButton.textContent = ok ? "Текст скопирован" : "Скопируйте вручную";
+  setTimeout(() => (el.copyButton.textContent = "Скопировать текст заказа"), 1200);
+}
+
+async function wizardContact(kind) {
+  const text = el.wizardPreview.value || makeWizardRequestText();
+  if (kind !== "call") await copyText(text);
+
+  if (kind === "telegram") {
+    el.wizardHint.textContent = "Вставьте текст заявки в чат (он уже скопирован).";
+    window.open(getTelegramLink(), "_blank", "noopener");
+    return;
   }
+
+  if (kind === "whatsapp") {
+    el.wizardHint.textContent = "Вставьте текст заявки в чат (он уже скопирован).";
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}`, "_blank", "noopener");
+    return;
+  }
+
+  el.wizardHint.textContent = "Можете продиктовать заявку по телефону или отправить текст в мессенджер.";
+  window.open(CONFIG.callLink, "_blank", "noopener");
 }
 
 function bindEvents() {
@@ -424,20 +449,16 @@ function bindEvents() {
     state.filters.search = e.target.value.trim();
     renderCatalog();
   });
-
   el.categorySelect.addEventListener("change", (e) => {
     state.filters.category = e.target.value;
     renderCatalog();
   });
-
-  el.priceButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      el.priceButtons.forEach((b) => b.classList.remove("is-active"));
-      button.classList.add("is-active");
-      state.filters.price = button.dataset.price;
-      renderCatalog();
-    });
-  });
+  el.priceButtons.forEach((button) => button.addEventListener("click", () => {
+    el.priceButtons.forEach((b) => b.classList.remove("is-active"));
+    button.classList.add("is-active");
+    state.filters.price = button.dataset.price;
+    renderCatalog();
+  }));
 
   el.modalClose.addEventListener("click", () => el.modal.close());
   el.modalWrapToggle.querySelectorAll("button[data-wrap]").forEach((button) => {
@@ -454,17 +475,20 @@ function bindEvents() {
     const message = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
     openMessengerChoice("Куда написать?", "Выберите удобный канал для заказа.", message);
   });
-
   el.copyButton.addEventListener("click", copyOrderText);
 
   el.openWizard.addEventListener("click", startWizard);
   el.contactFlorists.addEventListener("click", () => {
-    openMessengerChoice("Связаться", "Флористы ответят в удобном мессенджере.", "Здравствуйте! Нужна консультация флориста.");
+    openMessengerChoice("Связаться", "Выберите удобный канал для связи с флористом.", "Здравствуйте! Нужна консультация по индивидуальному букету.");
   });
 
   el.wizardClose.addEventListener("click", () => el.wizardModal.close());
   el.wizardNext.addEventListener("click", () => nextWizardStep(false));
   el.wizardSkip.addEventListener("click", () => nextWizardStep(true));
+  el.wizardCopy.addEventListener("click", () => copyText(el.wizardPreview.value));
+  el.wizardTelegram.addEventListener("click", () => wizardContact("telegram"));
+  el.wizardWhatsapp.addEventListener("click", () => wizardContact("whatsapp"));
+  el.wizardCall.addEventListener("click", () => wizardContact("call"));
 
   el.messengerTelegram.addEventListener("click", () => openMessenger("telegram"));
   el.messengerWhatsapp.addEventListener("click", () => openMessenger("whatsapp"));
@@ -475,7 +499,6 @@ function bindEvents() {
 async function init() {
   renderHeader();
   bindEvents();
-
   try {
     const response = await fetch("data/products.json", { cache: "no-store" });
     state.products = await response.json();

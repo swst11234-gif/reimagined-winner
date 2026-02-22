@@ -54,11 +54,11 @@
         </form>
 
         <section class="custom-bouquet-block">
-          <h3>Каталог готовых букетов</h3>
-          <p>Не смогли выбрать из готовых решений?<br />Свяжитесь с нашим флористом — мы соберём индивидуальный букет.</p>
+          <h3>Индивидуальный букет (микс)</h3>
+          <p>Ответьте на 4–5 вопросов — и мы соберём букет под ваш повод, цвет и бюджет.</p>
           <div class="custom-bouquet-actions">
             <button type="button" id="open-wizard" class="btn btn-primary">Подобрать букет</button>
-            <button type="button" id="contact-florists" class="btn btn-secondary">Связаться с флористами</button>
+            <button type="button" id="contact-florists" class="btn btn-secondary">Написать флористу</button>
           </div>
         </section>
 
@@ -111,7 +111,7 @@
         <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
         <p id="wizard-question" class="wizard-question"></p>
 
-        <label id="wizard-input-wrap" class="field">
+        <label class="field" id="wizard-input-wrap">
           <input type="text" id="wizard-input" placeholder="Введите ответ" />
           <textarea id="wizard-textarea" class="hidden" rows="3" placeholder="Введите ответ"></textarea>
           <select id="wizard-select" class="hidden"></select>
@@ -121,12 +121,24 @@
           <button type="button" id="wizard-skip" class="btn btn-secondary">Пропустить</button>
           <button type="button" id="wizard-next" class="btn btn-primary">Далее</button>
         </div>
+
+        <section id="wizard-final" class="wizard-final hidden">
+          <p class="picker-label">Текст заявки:</p>
+          <textarea id="wizard-preview" rows="8" readonly></textarea>
+          <button type="button" id="wizard-copy" class="btn btn-secondary">Скопировать текст</button>
+          <p id="wizard-hint" class="muted wizard-hint"></p>
+          <div class="wizard-contact-actions">
+            <button type="button" id="wizard-telegram" class="btn btn-secondary">Telegram</button>
+            <button type="button" id="wizard-whatsapp" class="btn btn-primary">WhatsApp</button>
+            <button type="button" id="wizard-call" class="btn btn-secondary">Позвонить</button>
+          </div>
+        </section>
       </article>
     </dialog>
 
     <dialog id="messenger-modal" class="messenger-modal">
       <article>
-        <h3 id="messenger-title">Куда написать?</h3>
+        <h3 id="messenger-title">Связаться</h3>
         <p id="messenger-description" class="muted"></p>
         <div class="messenger-actions">
           <button type="button" id="messenger-telegram" class="btn btn-secondary">Telegram</button>
@@ -167,6 +179,8 @@
         </div>
       </article>
     </template>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite">Текст заявки скопирован</div>
 
     <script src="app.js" defer></script>
   </body>
