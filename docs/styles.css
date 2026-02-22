@@ -132,18 +132,30 @@ textarea { resize: vertical; }
 .wizard-progress-bar span { display: block; height: 100%; background: #111827; width: 0; transition: width .2s ease; }
 .wizard-actions { margin-top: .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
 
+.wizard-field { display: block; }
+
 #wizard-input-wrap {
-  padding: .45rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .5rem .6rem;
+  background: #fff;
+  margin-top: .45rem;
 }
 #wizard-input-wrap input,
 #wizard-input-wrap textarea,
 #wizard-input-wrap select {
-  margin-top: 0;
-  border: 0;
-  outline: 0;
-  background: #fff;
-  box-shadow: none;
+  width: 100%;
+  margin: 0;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  border-radius: 0;
+  padding: .25rem 0;
+  appearance: none;
+  -webkit-appearance: none;
 }
+#wizard-input-wrap textarea { resize: vertical; min-height: 96px; }
 #wizard-input-wrap:focus-within {
   border-color: #111827;
   box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
