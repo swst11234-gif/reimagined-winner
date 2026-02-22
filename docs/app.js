@@ -1,6 +1,6 @@
 const CONFIG = {
   shopName: "Цветы",
-  city: "Казань",
+  city: "Астрахань",
   phone: "+7 (900) 000-00-00",
   whatsappNumber: "79000000000",
   telegramUsernameOrLink: "https://t.me/flower_shop_demo",

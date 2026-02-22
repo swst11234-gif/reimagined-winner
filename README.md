@@ -50,18 +50,26 @@
    - `"assets/rose-19.jpg"`
 3. Можно указывать несколько фото в массиве `images`, они покажутся в модальном окне.
 
-## Как поменять контакты и настройки магазина
+## Как поменять город, номер, время работы и ссылки на звонок/мессенджеры
 
-Откройте `docs/app.js` и отредактируйте объект `CONFIG`:
+Откройте `docs/app.js` и отредактируйте объект `CONFIG` в самом начале файла.
 
+Текущие значения по умолчанию:
+- `city: "Астрахань"`
+- `phone: "+7 (900) 000-00-00"`
+- `workingHours: "Ежедневно, 08:00–21:00"`
+
+Что за что отвечает:
+- `city` — город в заголовке сайта.
+- `phone` — основной телефон. Используется для отображения и для ссылки **Позвонить** (`tel:` формируется автоматически из `phone`).
+- `workingHours` — строка с графиком работы в шапке и инфоблоке.
+- `whatsappNumber` — номер для WhatsApp в международном формате, только цифры (пример: `79001234567`). Из него формируется ссылка `https://wa.me/<номер>`.
+- `telegramUsernameOrLink` — либо полный URL (например `https://t.me/flowers_astrakhan`), либо username (например `flowers_astrakhan` или `@flowers_astrakhan`).
+- `preferredMessenger` — куда ведёт кнопка **Заказать** в модалке: `"whatsapp"` или `"telegram"`.
+
+Остальные настройки:
 - `shopName`
-- `city`
-- `phone`
-- `whatsappNumber`
-- `telegramUsernameOrLink`
-- `preferredMessenger` (`"whatsapp"` или `"telegram"`)
 - `currency`
-- `workingHours`
 - `deliveryInfo`
 - `minimumOrder`
 
