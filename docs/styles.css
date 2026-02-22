@@ -56,18 +56,26 @@ input, select { width: 100%; margin-top: .35rem; border: 1px solid var(--border)
 
 .swatch[data-color-key="pink_center"] {
   position: relative;
-  background: #FF5AA5 !important;
+  background: linear-gradient(90deg, #FF5AA5 0 50%, #FFFFFF 50% 100%) !important;
+  border: 1px solid #D0D0D0;
+  overflow: hidden;
+}
+.swatch[data-color-key="pink_center"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.12);
+  transform: translateX(-0.5px);
 }
 .swatch[data-color-key="pink_center"]::after {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 8px;
+  inset: 0;
   border-radius: 50%;
-  background: #FFFFFF;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  box-shadow: inset -1px 0 0 rgba(208, 208, 208, 0.8);
 }
 
 .segment { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 999px; padding: 2px; gap: 2px; }
