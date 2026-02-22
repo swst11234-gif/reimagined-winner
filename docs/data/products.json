@@ -1,16 +1,16 @@
 [
   {
-    "id": "rose-19-red",
-    "title": "19 красных роз",
-    "price": 3990,
-    "category": "розы",
+    "id": "tulpani",
+    "title": "Тюльпанчики",
+    "price": 2000,
+    "category": "сезонное",
     "tags": ["хит"],
     "short": "Классика без повода.",
-    "description": "19 красных роз, атласная лента. Можно добавить открытку.",
-    "composition": "Красная роза, лента, упаковка",
+    "description": "Тюльпаны, атласная лента. Можно добавить открытку.",
+    "composition": "Тюльпан, лента, упаковка",
     "size": "Высота 55 см",
-    "images": ["assets/placeholder-1.svg", "assets/placeholder-2.svg"],
-    "availability": "in_stock"
+    "images": ["assets/photo.jpg", "assets/photo.jpg"],
+    "availability": "preorder"
   },
   {
     "id": "peony-soft",
