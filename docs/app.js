@@ -1,4 +1,4 @@
-const WRAP_DISCOUNT = 200;
+const WRAP_ADDON = 200;
 
 const CONFIG = {
   shopName: "Тюльпаны",
@@ -115,7 +115,7 @@ function getColorMeta(colorKey) {
   return COLOR_OPTIONS.find((c) => c.key === colorKey) || COLOR_OPTIONS[0];
 }
 function getCurrentPrice(product, selection) {
-  return selection.wrapMode === "nowrap" ? Math.max(product.price - WRAP_DISCOUNT, 0) : product.price;
+  return selection.wrapMode === "wrap" ? product.price + WRAP_ADDON : product.price;
 }
 function resolveImage(product, selection) {
   return product.images?.[selection.color]?.[selection.wrapMode] || PLACEHOLDER_IMAGE;
