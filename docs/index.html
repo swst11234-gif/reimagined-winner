@@ -53,6 +53,15 @@
           </label>
         </form>
 
+        <section class="custom-bouquet-block">
+          <h3>Каталог готовых букетов</h3>
+          <p>Не смогли выбрать из готовых решений?<br />Свяжитесь с нашим флористом — мы соберём индивидуальный букет.</p>
+          <div class="custom-bouquet-actions">
+            <button type="button" id="open-wizard" class="btn btn-primary">Подобрать букет</button>
+            <button type="button" id="contact-florists" class="btn btn-secondary">Связаться с флористами</button>
+          </div>
+        </section>
+
         <div id="catalog-grid" class="product-grid"></div>
         <p id="empty-state" class="empty-state hidden">Ничего не найдено. Попробуйте изменить фильтры.</p>
       </section>
@@ -94,9 +103,31 @@
       </article>
     </dialog>
 
+    <dialog id="wizard-modal" class="wizard-modal">
+      <article>
+        <button type="button" id="wizard-close" class="modal-close" aria-label="Закрыть">×</button>
+        <h3>Пройдите короткий опрос — мы соберём букет специально для вас.</h3>
+        <p id="wizard-progress" class="muted"></p>
+        <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
+        <p id="wizard-question" class="wizard-question"></p>
+
+        <label id="wizard-input-wrap" class="field">
+          <input type="text" id="wizard-input" placeholder="Введите ответ" />
+          <textarea id="wizard-textarea" class="hidden" rows="3" placeholder="Введите ответ"></textarea>
+          <select id="wizard-select" class="hidden"></select>
+        </label>
+
+        <div class="wizard-actions">
+          <button type="button" id="wizard-skip" class="btn btn-secondary">Пропустить</button>
+          <button type="button" id="wizard-next" class="btn btn-primary">Далее</button>
+        </div>
+      </article>
+    </dialog>
+
     <dialog id="messenger-modal" class="messenger-modal">
       <article>
-        <h3>Куда написать?</h3>
+        <h3 id="messenger-title">Куда написать?</h3>
+        <p id="messenger-description" class="muted"></p>
         <div class="messenger-actions">
           <button type="button" id="messenger-telegram" class="btn btn-secondary">Telegram</button>
           <button type="button" id="messenger-whatsapp" class="btn btn-primary">WhatsApp</button>

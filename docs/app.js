@@ -13,10 +13,26 @@ const CONFIG = {
 const COLOR_OPTIONS = [
   { key: "white", name: "Белый", swatch: "#FFFFFF", border: true },
   { key: "red", name: "Красный", swatch: "#D11A2A" },
-  { key: "pink_center", name: "Розовый с белым центром", swatch: "#FF5AA5" },
+  { key: "pink_center", name: "Розово-белый", swatch: "#FF5AA5", border: true },
   { key: "pink", name: "Розовый", swatch: "#FF5AA5" },
   { key: "yellow", name: "Жёлтый", swatch: "#F7C948" },
   { key: "purple", name: "Фиолетовый", swatch: "#6D28D9" },
+];
+
+const WIZARD_STEPS = [
+  { key: "forWhom", question: "Для кого выбираете букет?", type: "text", placeholder: "Например: для мамы" },
+  { key: "occasion", question: "По какому поводу будете дарить?", type: "text", placeholder: "Например: день рождения" },
+  { key: "flowers", question: "Любимые цветы или цветовая гамма?", type: "textarea", placeholder: "Например: нежные, пастельные" },
+  { key: "budget", question: "Примерный бюджет заказа", type: "text", placeholder: "Например: 3000-5000 ₽" },
+  { key: "name", question: "Ваше имя", type: "text", placeholder: "Как к вам обращаться" },
+  {
+    key: "contactMethod",
+    question: "Как удобнее получить подборку?",
+    type: "select",
+    options: ["Телефон", "Telegram", "WhatsApp"],
+  },
+  { key: "phone", question: "Номер телефона", type: "text", placeholder: "+7 ..." },
+  { key: "telegram", question: "Если не хотите звонок — ник Telegram", type: "text", placeholder: "@username" },
 ];
 
 const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
@@ -26,6 +42,11 @@ const state = {
   currentProduct: null,
   selectionById: {},
   filters: { search: "", price: "all", category: "all" },
+  pendingMessage: "",
+  wizard: {
+    step: 0,
+    answers: {},
+  },
 };
 
 const el = {
@@ -39,6 +60,9 @@ const el = {
   categorySelect: document.getElementById("category"),
   priceButtons: document.querySelectorAll("[data-price]"),
   cardTemplate: document.getElementById("card-template"),
+  openWizard: document.getElementById("open-wizard"),
+  contactFlorists: document.getElementById("contact-florists"),
+
   modal: document.getElementById("product-modal"),
   modalClose: document.getElementById("modal-close"),
   modalImage: document.getElementById("modal-image"),
@@ -52,7 +76,21 @@ const el = {
   modalWrapToggle: document.getElementById("modal-wrap-toggle"),
   orderButton: document.getElementById("order-button"),
   copyButton: document.getElementById("copy-button"),
+
+  wizardModal: document.getElementById("wizard-modal"),
+  wizardClose: document.getElementById("wizard-close"),
+  wizardProgress: document.getElementById("wizard-progress"),
+  wizardProgressFill: document.getElementById("wizard-progress-bar-fill"),
+  wizardQuestion: document.getElementById("wizard-question"),
+  wizardInput: document.getElementById("wizard-input"),
+  wizardTextarea: document.getElementById("wizard-textarea"),
+  wizardSelect: document.getElementById("wizard-select"),
+  wizardSkip: document.getElementById("wizard-skip"),
+  wizardNext: document.getElementById("wizard-next"),
+
   messengerModal: document.getElementById("messenger-modal"),
+  messengerTitle: document.getElementById("messenger-title"),
+  messengerDescription: document.getElementById("messenger-description"),
   messengerClose: document.getElementById("messenger-close"),
   messengerTelegram: document.getElementById("messenger-telegram"),
   messengerWhatsapp: document.getElementById("messenger-whatsapp"),
@@ -74,9 +112,7 @@ function getTelegramLink() {
 }
 
 function getSelection(productId) {
-  if (!state.selectionById[productId]) {
-    state.selectionById[productId] = { color: "white", wrapMode: "wrap" };
-  }
+  if (!state.selectionById[productId]) state.selectionById[productId] = { color: "white", wrapMode: "wrap" };
   return state.selectionById[productId];
 }
 
@@ -116,6 +152,21 @@ function makeOrderText(product, selection) {
   const wrapLabel = selection.wrapMode === "wrap" ? "крафт" : "без бумаги";
   const price = formatPrice(getCurrentPrice(product, selection));
   return `Здравствуйте! Хочу заказать: ${product.title}. Цвет: ${colorName}. Упаковка: ${wrapLabel}. Цена: ${price}. Дата/время: __. Адрес: __.`;
+}
+
+function makeWizardRequestText() {
+  const a = state.wizard.answers;
+  return [
+    "Заявка на индивидуальный букет:",
+    `Для кого: ${a.forWhom || "—"}`,
+    `Повод: ${a.occasion || "—"}`,
+    `Цветы/цвет: ${a.flowers || "—"}`,
+    `Бюджет: ${a.budget || "—"}`,
+    `Имя: ${a.name || "—"}`,
+    `Способ связи: ${a.contactMethod || "—"}`,
+    `Телефон: ${a.phone || "—"}`,
+    `Telegram: ${a.telegram || "—"}`,
+  ].join("\n");
 }
 
 function renderHeader() {
@@ -254,10 +305,7 @@ function renderModal() {
 }
 
 function openMessenger(kind) {
-  const product = state.currentProduct;
-  if (!product) return;
-  const text = encodeURIComponent(makeOrderText(product, getSelection(product.id)));
-
+  const text = encodeURIComponent(state.pendingMessage || "Здравствуйте!");
   const links = {
     whatsapp: `https://wa.me/${CONFIG.whatsappNumber}?text=${text}`,
     telegram: `${getTelegramLink()}?text=${text}`,
@@ -268,13 +316,104 @@ function openMessenger(kind) {
   el.messengerModal.close();
 }
 
+function openMessengerChoice(title, description, message) {
+  state.pendingMessage = message || "Здравствуйте!";
+  el.messengerTitle.textContent = title;
+  el.messengerDescription.textContent = description || "";
+  el.messengerModal.showModal();
+}
+
+function resetWizard() {
+  state.wizard.step = 0;
+  state.wizard.answers = {};
+}
+
+function readWizardValue(step) {
+  if (step.type === "select") return el.wizardSelect.value;
+  if (step.type === "textarea") return el.wizardTextarea.value.trim();
+  return el.wizardInput.value.trim();
+}
+
+function fillWizardField(step) {
+  const value = state.wizard.answers[step.key] || "";
+  el.wizardInput.classList.toggle("hidden", step.type !== "text");
+  el.wizardTextarea.classList.toggle("hidden", step.type !== "textarea");
+  el.wizardSelect.classList.toggle("hidden", step.type !== "select");
+
+  if (step.type === "select") {
+    el.wizardSelect.innerHTML = "";
+    step.options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      el.wizardSelect.appendChild(option);
+    });
+    el.wizardSelect.value = value || step.options[0];
+    el.wizardSelect.focus();
+    return;
+  }
+
+  if (step.type === "textarea") {
+    el.wizardTextarea.placeholder = step.placeholder || "Введите ответ";
+    el.wizardTextarea.value = value;
+    el.wizardTextarea.focus();
+    return;
+  }
+
+  el.wizardInput.placeholder = step.placeholder || "Введите ответ";
+  el.wizardInput.value = value;
+  el.wizardInput.focus();
+}
+
+function renderWizardStep() {
+  const step = WIZARD_STEPS[state.wizard.step];
+  const index = state.wizard.step + 1;
+  const total = WIZARD_STEPS.length;
+
+  el.wizardProgress.textContent = `Шаг ${index} из ${total}`;
+  el.wizardProgressFill.style.width = `${(index / total) * 100}%`;
+  el.wizardQuestion.textContent = step.question;
+  el.wizardNext.textContent = index === total ? "Отправить запрос" : "Далее";
+  fillWizardField(step);
+}
+
+function nextWizardStep(skip = false) {
+  const step = WIZARD_STEPS[state.wizard.step];
+  if (!skip) {
+    state.wizard.answers[step.key] = readWizardValue(step);
+  }
+
+  const isLast = state.wizard.step === WIZARD_STEPS.length - 1;
+  if (isLast) {
+    const requestText = makeWizardRequestText();
+    el.wizardModal.close();
+    openMessengerChoice(
+      "Куда отправить заявку?",
+      "Выберите удобный канал, чтобы отправить запрос на индивидуальный букет.",
+      requestText,
+    );
+    return;
+  }
+
+  state.wizard.step += 1;
+  renderWizardStep();
+}
+
+function startWizard() {
+  resetWizard();
+  renderWizardStep();
+  el.wizardModal.showModal();
+}
+
 async function copyOrderText() {
   if (!state.currentProduct) return;
   const text = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
   try {
     await navigator.clipboard.writeText(text);
     el.copyButton.textContent = "Текст скопирован";
-    setTimeout(() => { el.copyButton.textContent = "Скопировать текст заказа"; }, 1200);
+    setTimeout(() => {
+      el.copyButton.textContent = "Скопировать текст заказа";
+    }, 1200);
   } catch {
     el.copyButton.textContent = "Скопируйте вручную";
   }
@@ -310,8 +449,22 @@ function bindEvents() {
     });
   });
 
-  el.orderButton.addEventListener("click", () => el.messengerModal.showModal());
+  el.orderButton.addEventListener("click", () => {
+    if (!state.currentProduct) return;
+    const message = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
+    openMessengerChoice("Куда написать?", "Выберите удобный канал для заказа.", message);
+  });
+
   el.copyButton.addEventListener("click", copyOrderText);
+
+  el.openWizard.addEventListener("click", startWizard);
+  el.contactFlorists.addEventListener("click", () => {
+    openMessengerChoice("Связаться", "Флористы ответят в удобном мессенджере.", "Здравствуйте! Нужна консультация флориста.");
+  });
+
+  el.wizardClose.addEventListener("click", () => el.wizardModal.close());
+  el.wizardNext.addEventListener("click", () => nextWizardStep(false));
+  el.wizardSkip.addEventListener("click", () => nextWizardStep(true));
 
   el.messengerTelegram.addEventListener("click", () => openMessenger("telegram"));
   el.messengerWhatsapp.addEventListener("click", () => openMessenger("whatsapp"));

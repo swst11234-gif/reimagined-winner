@@ -28,10 +28,16 @@ body { margin: 0; font-family: Inter, "Segoe UI", sans-serif; background: var(--
 .filters { display: grid; gap: .75rem; margin-bottom: 1rem; }
 .field { border: 1px solid var(--border); border-radius: 12px; padding: .65rem; background: #fff; }
 .field span, .field legend { color: var(--muted); font-size: .84rem; }
-input, select { width: 100%; margin-top: .35rem; border: 1px solid var(--border); border-radius: 9px; padding: .58rem; font: inherit; }
+input, select, textarea { width: 100%; margin-top: .35rem; border: 1px solid var(--border); border-radius: 9px; padding: .58rem; font: inherit; }
+textarea { resize: vertical; }
 .price-buttons { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .45rem; }
 .chip { border: 1px solid var(--border); border-radius: 999px; background: #fff; padding: .42rem .72rem; font-weight: 700; color: var(--muted); }
 .chip.is-active { background: #111827; color: #fff; border-color: #111827; }
+
+.custom-bouquet-block { border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); padding: 1rem; margin-bottom: 1rem; }
+.custom-bouquet-block h3 { margin: 0 0 .45rem; }
+.custom-bouquet-block p { margin: 0; color: var(--muted); }
+.custom-bouquet-actions { margin-top: .8rem; display: grid; gap: .5rem; }
 
 .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .72rem; }
 .card { background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; transition: transform .16s ease, box-shadow .16s ease; }
@@ -92,9 +98,14 @@ input, select { width: 100%; margin-top: .35rem; border: 1px solid var(--border)
 .image-hint { margin: .3rem .75rem 0; font-size: .76rem; color: #9a7a27; }
 .img-fade { opacity: 1; transition: opacity 180ms ease; }
 
-.product-modal { width: min(680px, 94vw); border: none; border-radius: 18px; padding: 0; overflow: hidden; }
-.product-modal::backdrop, .messenger-modal::backdrop { background: rgba(12, 10, 10, .55); }
-.product-modal article { position: relative; }
+.product-modal,
+.messenger-modal,
+.wizard-modal { width: min(680px, 94vw); border: none; border-radius: 18px; padding: 0; overflow: hidden; }
+.product-modal::backdrop,
+.messenger-modal::backdrop,
+.wizard-modal::backdrop { background: rgba(12, 10, 10, .55); }
+.product-modal article,
+.wizard-modal article { position: relative; }
 .modal-close { position: absolute; right: .6rem; top: .6rem; width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 999px; background: #fff; font-size: 1.2rem; z-index: 1; }
 .modal-media-wrap { aspect-ratio: 4 / 3; background: #f6efee; }
 .modal-image { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -105,13 +116,21 @@ input, select { width: 100%; margin-top: .35rem; border: 1px solid var(--border)
 .order-actions { display: grid; gap: .45rem; margin-top: .95rem; }
 .sticky-order { position: sticky; bottom: 0; background: linear-gradient(to top, #fff 70%, rgba(255,255,255,.86)); padding-bottom: .2rem; }
 
-.messenger-modal { width: min(360px, 92vw); border: none; border-radius: 16px; padding: 1rem; }
-.messenger-modal h3 { margin: 0 0 .75rem; }
-.messenger-actions { display: grid; gap: .5rem; }
+.messenger-modal,
+.wizard-modal { width: min(460px, 94vw); padding: 1rem; }
+.messenger-modal h3,
+.wizard-modal h3 { margin: 0 0 .75rem; }
+.messenger-actions { display: grid; gap: .5rem; margin-top: .6rem; }
 .link-close { margin-top: .7rem; border: 0; background: transparent; color: #6b7280; text-decoration: underline; cursor: pointer; }
+
+.wizard-question { margin: .8rem 0 .4rem; font-weight: 700; }
+.wizard-progress-bar { height: 8px; background: #f1f1f1; border-radius: 999px; overflow: hidden; }
+.wizard-progress-bar span { display: block; height: 100%; background: #111827; width: 0; transition: width .2s ease; }
+.wizard-actions { margin-top: .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
 
 @media (min-width: 760px) {
   .filters { grid-template-columns: 2fr 2fr 1.2fr; align-items: end; }
+  .custom-bouquet-actions { grid-template-columns: 1fr 1fr; }
   .product-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
   .order-actions { grid-template-columns: 1fr 1fr; }
 }
