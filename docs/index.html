@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Уютная витрина цветов: выберите букет и закажите в WhatsApp или Telegram в один клик."
+    />
+    <title>Цветы</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div>
+          <p class="eyebrow">Доставка цветов</p>
+          <h1 id="shop-title">Цветы • Астрахань</h1>
+          <p id="shop-meta" class="muted">+7 (900) 000-00-00 · Ежедневно, 08:00–21:00</p>
+        </div>
+        <div class="contact-box">
+          <p class="muted">Быстрый заказ</p>
+          <div id="contact-links" class="contact-links"></div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="container info-strip" id="shop-info"></section>
+
+      <section class="container section">
+        <div class="section-title-row">
+          <h2>Популярное</h2>
+          <span class="muted">Первые 6 позиций</span>
+        </div>
+        <div id="popular-grid" class="product-grid"></div>
+      </section>
+
+      <section class="container section">
+        <div class="section-title-row">
+          <h2>Каталог</h2>
+          <span id="results-count" class="muted"></span>
+        </div>
+
+        <form id="filters" class="filters" autocomplete="off">
+          <label class="field">
+            <span>Поиск</span>
+            <input type="search" id="search" placeholder="Например, пионы" />
+          </label>
+
+          <fieldset class="field">
+            <legend>Цена</legend>
+            <div class="price-buttons">
+              <button type="button" class="chip is-active" data-price="all">Все</button>
+              <button type="button" class="chip" data-price="2000">До 2000</button>
+              <button type="button" class="chip" data-price="4000">До 4000</button>
+              <button type="button" class="chip" data-price="4000+">4000+</button>
+            </div>
+          </fieldset>
+
+          <label class="field">
+            <span>Тип</span>
+            <select id="category">
+              <option value="all">Все категории</option>
+            </select>
+          </label>
+        </form>
+
+        <div id="catalog-grid" class="product-grid"></div>
+        <p id="empty-state" class="empty-state hidden">
+          По вашему запросу ничего не найдено. Попробуйте снять часть фильтров.
+        </p>
+      </section>
+    </main>
+
+    <dialog id="product-modal" class="product-modal">
+      <article>
+        <button type="button" id="modal-close" class="modal-close" aria-label="Закрыть">×</button>
+        <div id="modal-gallery" class="modal-gallery"></div>
+        <div class="modal-content">
+          <p id="modal-category" class="eyebrow"></p>
+          <h3 id="modal-title"></h3>
+          <p id="modal-price" class="modal-price"></p>
+          <p id="modal-description"></p>
+          <ul id="modal-tags" class="tag-list"></ul>
+          <div class="modal-details">
+            <p><strong>Наличие:</strong> <span id="modal-availability"></span></p>
+            <p><strong>Размер:</strong> <span id="modal-size"></span></p>
+            <p><strong>Состав:</strong> <span id="modal-composition"></span></p>
+          </div>
+
+          <div class="order-actions sticky-order">
+            <button type="button" id="order-button" class="btn btn-primary">Заказать</button>
+            <button type="button" id="copy-button" class="btn btn-secondary">Скопировать текст заказа</button>
+          </div>
+        </div>
+      </article>
+    </dialog>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card-media-wrap">
+          <img class="card-media" src="" alt="" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <ul class="tag-list"></ul>
+          <h3 class="card-title"></h3>
+          <p class="card-short"></p>
+          <div class="card-footer">
+            <p class="card-price"></p>
+            <button type="button" class="btn btn-small">Открыть</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
