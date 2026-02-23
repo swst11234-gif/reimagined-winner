@@ -1,5 +1,6 @@
 const WRAP_ADDON = 200;
 const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
+const LAST_ORDER_KEY = "tlp_last_order";
 
 const CONFIG = {
   shopName: "Тюльпаны",
@@ -44,6 +45,10 @@ const state = {
   pendingMessage: "",
   wizard: { step: 0, answers: {}, finalMode: false },
   mix: { qty: 21, colors: ["white", "pink"], style: "florist_choice", wrapMode: "nowrap" },
+  orderDraft: null,
+  orderStep: "summary",
+  lastOrder: null,
+  hideLastOrderUntilReload: false,
 };
 
 const el = {
@@ -61,6 +66,10 @@ const el = {
   occasionIndicator: document.getElementById("occasion-indicator"),
   popularSizeButtons: document.querySelectorAll("[data-popular-size]"),
   popularSizeIndicator: document.getElementById("popular-size-indicator"),
+  lastOrder: document.getElementById("last-order"),
+  lastOrderText: document.getElementById("last-order-text"),
+  lastOrderRepeat: document.getElementById("last-order-repeat"),
+  lastOrderClose: document.getElementById("last-order-close"),
 
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
@@ -111,6 +120,25 @@ const el = {
   mixExampleImg: document.getElementById("mix-example-img"),
   mixSummary: document.getElementById("mix-summary"),
   mixOrder: document.getElementById("mix-order"),
+
+  orderSummaryModal: document.getElementById("order-summary-modal"),
+  orderSummaryClose: document.getElementById("order-summary-close"),
+  orderSummaryStep: document.getElementById("order-summary-step"),
+  orderSummaryList: document.getElementById("order-summary-list"),
+  orderDate: document.getElementById("order-date"),
+  orderComment: document.getElementById("order-comment"),
+  orderSummaryActions: document.getElementById("order-summary-actions"),
+  orderEdit: document.getElementById("order-edit"),
+  orderContinue: document.getElementById("order-continue"),
+  orderConfirmStep: document.getElementById("order-confirm-step"),
+  orderConfirmActions: document.getElementById("order-confirm-actions"),
+  orderBack: document.getElementById("order-back"),
+  orderDone: document.getElementById("order-done"),
+  orderId: document.getElementById("order-id"),
+  orderIdCopy: document.getElementById("order-id-copy"),
+  orderTelegram: document.getElementById("order-telegram"),
+  orderWhatsapp: document.getElementById("order-whatsapp"),
+  orderCall: document.getElementById("order-call"),
 
   messengerModal: document.getElementById("messenger-modal"),
   messengerTitle: document.getElementById("messenger-title"),
@@ -221,6 +249,114 @@ function openMessengerChoice(title, desc, message) {
   el.messengerTitle.textContent = title;
   el.messengerDescription.textContent = desc || "";
   el.messengerModal.showModal();
+}
+
+function generateOrderId() {
+  return `TLP-${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+function formatOrderDate(value) {
+  if (!value) return "без";
+  try {
+    return new Date(`${value}T00:00:00`).toLocaleDateString("ru-RU");
+  } catch {
+    return value;
+  }
+}
+
+function buildOrderMessage(order) {
+  return [
+    "Здравствуйте!",
+    "Хочу заказать букет:",
+    "",
+    `Номер заказа: ${order.id}`,
+    `Размер: ${order.qty} тюльпан${order.qty === 1 ? "" : "ов"}`,
+    `Цвет: ${getColorMeta(order.color).name.toLowerCase()}`,
+    `Упаковка: ${order.wrapMode === "wrap" ? "крафтовая бумага" : "без"}`,
+    `Цена: ${formatPrice(order.price)}`,
+    `Дата: ${formatOrderDate(order.date)}`,
+    `Комментарий: ${order.comment || "без"}`,
+  ].join("\n");
+}
+
+function saveLastOrder(order) {
+  const payload = {
+    id: order.id,
+    productId: order.productId,
+    qty: order.qty,
+    color: order.color,
+    wrapMode: order.wrapMode,
+    price: order.price,
+  };
+  localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(payload));
+  state.lastOrder = payload;
+}
+
+function loadLastOrder() {
+  try {
+    const raw = localStorage.getItem(LAST_ORDER_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.productId || !Number.isFinite(parsed.qty) || !parsed.color || !parsed.wrapMode || !Number.isFinite(parsed.price)) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function renderLastOrderBanner() {
+  if (state.hideLastOrderUntilReload || !state.lastOrder) {
+    el.lastOrder.classList.add("hidden");
+    return;
+  }
+  const product = state.products.find((p) => p.id === state.lastOrder.productId);
+  if (!product) {
+    localStorage.removeItem(LAST_ORDER_KEY);
+    state.lastOrder = null;
+    el.lastOrder.classList.add("hidden");
+    return;
+  }
+  el.lastOrderText.textContent = `Последний заказ: ${state.lastOrder.qty} тюльпан${state.lastOrder.qty === 1 ? "" : "ов"} — ${getColorMeta(state.lastOrder.color).name.toLowerCase()}`;
+  el.lastOrder.classList.remove("hidden");
+}
+
+function renderOrderSummary() {
+  const d = state.orderDraft;
+  if (!d) return;
+  el.orderSummaryList.innerHTML = `
+    <p><strong>Размер:</strong> ${d.qty} тюльпан${d.qty === 1 ? "" : "ов"}</p>
+    <p><strong>Цвет:</strong> ${getColorMeta(d.color).name}</p>
+    <p><strong>Упаковка:</strong> ${d.wrapMode === "wrap" ? "С крафтовой бумагой" : "Без"}</p>
+    <p><strong>Итоговая цена:</strong> ${formatPrice(d.price)}</p>
+  `;
+  el.orderDate.value = d.date || "";
+  el.orderComment.value = d.comment || "";
+}
+
+function setOrderStep(step) {
+  state.orderStep = step;
+  const summary = step === "summary";
+  el.orderSummaryStep.classList.toggle("hidden", !summary);
+  el.orderSummaryActions.classList.toggle("hidden", !summary);
+  el.orderConfirmStep.classList.toggle("hidden", summary);
+  el.orderConfirmActions.classList.toggle("hidden", summary);
+}
+
+function openOrderSummary(product, sel, preset = {}) {
+  state.orderDraft = {
+    productId: product.id,
+    qty: productQty(product),
+    color: preset.color || sel.color,
+    wrapMode: preset.wrapMode || sel.wrapMode,
+    price: getCurrentPrice(product, { color: preset.color || sel.color, wrapMode: preset.wrapMode || sel.wrapMode }),
+    date: preset.date || "",
+    comment: preset.comment || "",
+    id: preset.id || "",
+  };
+  renderOrderSummary();
+  setOrderStep("summary");
+  if (el.modal.open) el.modal.close();
+  el.orderSummaryModal.showModal();
 }
 
 function openChannel(kind, text = state.pendingMessage) {
@@ -620,7 +756,7 @@ function bindEvents() {
   }));
   el.orderButton.addEventListener("click", () => {
     if (!state.currentProduct) return;
-    openMessengerChoice("Куда написать?", "Выберите удобный канал для заказа.", makeOrderText(state.currentProduct, getSelection(state.currentProduct.id)));
+    openOrderSummary(state.currentProduct, getSelection(state.currentProduct.id));
   });
   el.copyButton.addEventListener("click", async () => {
     if (!state.currentProduct) return;
@@ -662,6 +798,55 @@ function bindEvents() {
     openMessengerChoice("Куда написать?", "Текст микс-заявки уже скопирован", text);
   });
 
+  const closeByOverlay = (dialog) => dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  closeByOverlay(el.modal);
+  closeByOverlay(el.orderSummaryModal);
+
+  el.orderSummaryClose.addEventListener("click", () => el.orderSummaryModal.close());
+  el.orderEdit.addEventListener("click", () => el.orderSummaryModal.close());
+  el.orderBack.addEventListener("click", () => setOrderStep("summary"));
+  el.orderDone.addEventListener("click", () => el.orderSummaryModal.close());
+  el.orderIdCopy.addEventListener("click", () => {
+    if (!state.orderDraft?.id) return;
+    copyText(state.orderDraft.id);
+  });
+
+  const continueOrder = () => {
+    if (!state.orderDraft) return;
+    state.orderDraft.date = el.orderDate.value;
+    state.orderDraft.comment = el.orderComment.value.trim();
+    state.orderDraft.id = state.orderDraft.id || generateOrderId();
+    el.orderId.textContent = state.orderDraft.id;
+    saveLastOrder(state.orderDraft);
+    renderLastOrderBanner();
+    setOrderStep("confirm");
+  };
+  el.orderContinue.addEventListener("click", continueOrder);
+
+  const sendOrder = (kind) => {
+    if (!state.orderDraft) return;
+    const text = buildOrderMessage(state.orderDraft);
+    openChannel(kind, text);
+  };
+  el.orderTelegram.addEventListener("click", () => sendOrder("telegram"));
+  el.orderWhatsapp.addEventListener("click", () => sendOrder("whatsapp"));
+  el.orderCall.addEventListener("click", () => sendOrder("call"));
+
+  el.lastOrderRepeat.addEventListener("click", () => {
+    if (!state.lastOrder) return;
+    const product = state.products.find((p) => p.id === state.lastOrder.productId);
+    if (!product) return;
+    getSelection(product.id).color = state.lastOrder.color;
+    getSelection(product.id).wrapMode = state.lastOrder.wrapMode;
+    openOrderSummary(product, getSelection(product.id), state.lastOrder);
+  });
+  el.lastOrderClose.addEventListener("click", () => {
+    state.hideLastOrderUntilReload = true;
+    renderLastOrderBanner();
+  });
+
   el.messengerTelegram.addEventListener("click", () => openChannel("telegram"));
   el.messengerWhatsapp.addEventListener("click", () => openChannel("whatsapp"));
   el.messengerCall.addEventListener("click", () => openChannel("call"));
@@ -675,6 +860,7 @@ async function init() {
   bindEvents();
   try {
     renderSkeletonCards(6);
+    state.lastOrder = loadLastOrder();
     const res = await fetch("data/products.json", { cache: "no-store" });
     state.products = await res.json();
     state.products.forEach((p) => getSelection(p.id));
@@ -686,6 +872,7 @@ async function init() {
     });
     renderCatalog();
     renderPopularSizeIndicator();
+    renderLastOrderBanner();
     renderMix();
   } catch {
     el.catalogGrid.innerHTML = "<p class='empty-state'>Не удалось загрузить каталог.</p>";

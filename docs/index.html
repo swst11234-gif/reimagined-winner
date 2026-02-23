@@ -64,6 +64,14 @@
           <span id="results-count" class="muted"></span>
         </div>
 
+        <div id="last-order" class="last-order hidden" aria-live="polite">
+          <p id="last-order-text"></p>
+          <div class="last-order-actions">
+            <button type="button" id="last-order-repeat" class="btn btn-secondary">Повторить</button>
+            <button type="button" id="last-order-close" class="last-order-close" aria-label="Скрыть">×</button>
+          </div>
+        </div>
+
         <div class="popular-size-row" aria-label="Популярные размеры">
           <p class="popular-size-label">Чаще берут:</p>
           <div id="popular-size-chips" class="popular-size-chips">
@@ -283,6 +291,50 @@
 
         <div class="wizard-sticky-actions">
           <button type="button" id="mix-order" class="btn btn-primary">Заказать микс</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="order-summary-modal" class="order-summary-modal">
+      <article>
+        <button type="button" id="order-summary-close" class="modal-close" aria-label="Закрыть">×</button>
+
+        <div id="order-summary-step" class="wizard-scroll">
+          <h3>Ваш заказ</h3>
+          <div id="order-summary-list" class="order-summary-list"></div>
+
+          <label class="field compact-field">
+            <span>Дата получения</span>
+            <input type="date" id="order-date" />
+          </label>
+
+          <label class="field compact-field">
+            <span>Комментарий (необязательно)</span>
+            <textarea id="order-comment" rows="3" placeholder="Например: к 19:00, без открытки"></textarea>
+          </label>
+        </div>
+
+        <div id="order-confirm-step" class="wizard-scroll hidden">
+          <h3>Заказ сформирован</h3>
+          <p class="muted">Ваш номер:</p>
+          <p id="order-id" class="order-id"></p>
+          <button type="button" id="order-id-copy" class="btn btn-secondary">Скопировать</button>
+          <p class="muted order-confirm-text">Выберите способ связи для отправки готового заказа:</p>
+          <div class="messenger-actions">
+            <button type="button" id="order-telegram" class="btn btn-secondary">Telegram</button>
+            <button type="button" id="order-whatsapp" class="btn btn-primary">WhatsApp</button>
+            <button type="button" id="order-call" class="btn btn-secondary">Позвонить</button>
+          </div>
+        </div>
+
+        <div id="order-summary-actions" class="wizard-sticky-actions">
+          <button type="button" id="order-edit" class="btn btn-secondary">Изменить</button>
+          <button type="button" id="order-continue" class="btn btn-primary">Продолжить</button>
+        </div>
+
+        <div id="order-confirm-actions" class="wizard-sticky-actions hidden">
+          <button type="button" id="order-back" class="btn btn-secondary">Изменить</button>
+          <button type="button" id="order-done" class="btn btn-primary">Готово</button>
         </div>
       </article>
     </dialog>
