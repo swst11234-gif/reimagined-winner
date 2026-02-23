@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Каталог тюльпанов с быстрым заказом в WhatsApp, Telegram или звонком." />
+    <meta name="description" content="Каталог тюльпанов и конструктор микс-букета с быстрым заказом через WhatsApp, Telegram или звонок." />
     <title>Тюльпаны • Астрахань</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -22,8 +22,38 @@
       </div>
     </header>
 
-    <main>
-      <section class="container section">
+    <main class="container">
+      <section class="section">
+        <h2 class="section-title">Повод подарить цветы</h2>
+        <div id="occasions" class="occasion-grid">
+          <button type="button" data-occasion="birthday">🎂 День рождения</button>
+          <button type="button" data-occasion="date">💞 Свидание</button>
+          <button type="button" data-occasion="mom">💐 Маме</button>
+          <button type="button" data-occasion="march8">🌷 8 марта</button>
+          <button type="button" data-occasion="just">✨ Просто так</button>
+        </div>
+        <p id="occasion-indicator" class="muted hidden"></p>
+      </section>
+
+      <section class="section custom-bouquet-block">
+        <h3>Индивидуальный букет (микс)</h3>
+        <p>Ответьте на 4–5 вопросов — и мы соберём букет под ваш повод, цвет и бюджет.</p>
+        <div class="custom-bouquet-actions">
+          <button type="button" id="open-wizard" class="btn btn-primary">Подобрать букет</button>
+          <button type="button" id="contact-florists" class="btn btn-secondary">Написать флористу</button>
+        </div>
+      </section>
+
+      <section class="section custom-bouquet-block mix-cta">
+        <h3>Собрать микс-букет</h3>
+        <p>Выберите количество и цвета — флорист соберёт красивый микс под ваш бюджет.</p>
+        <div class="custom-bouquet-actions">
+          <button type="button" id="open-mix" class="btn btn-primary">Собрать микс</button>
+          <button type="button" id="contact-florists-mix" class="btn btn-secondary">Написать флористу</button>
+        </div>
+      </section>
+
+      <section class="section">
         <div class="section-title-row">
           <h2>Каталог</h2>
           <span id="results-count" class="muted"></span>
@@ -53,15 +83,6 @@
           </label>
         </form>
 
-        <section class="custom-bouquet-block">
-          <h3>Индивидуальный букет (микс)</h3>
-          <p>Ответьте на 4–5 вопросов — и мы соберём букет под ваш повод, цвет и бюджет.</p>
-          <div class="custom-bouquet-actions">
-            <button type="button" id="open-wizard" class="btn btn-primary">Подобрать букет</button>
-            <button type="button" id="contact-florists" class="btn btn-secondary">Написать флористу</button>
-          </div>
-        </section>
-
         <div id="catalog-grid" class="product-grid"></div>
         <p id="empty-state" class="empty-state hidden">Ничего не найдено. Попробуйте изменить фильтры.</p>
       </section>
@@ -70,9 +91,7 @@
     <dialog id="product-modal" class="product-modal">
       <article>
         <button type="button" id="modal-close" class="modal-close" aria-label="Закрыть">×</button>
-        <div class="modal-media-wrap">
-          <img id="modal-image" class="modal-image img-fade" src="" alt="" />
-        </div>
+        <div class="modal-media-wrap"><img id="modal-image" class="modal-image img-fade" src="" alt="" /></div>
         <p id="modal-missing-hint" class="image-hint hidden">Фото временно отсутствует</p>
         <div class="modal-content">
           <p id="modal-category" class="eyebrow"></p>
@@ -93,8 +112,6 @@
             </div>
           </div>
 
-          <p class="muted availability">Под заказ</p>
-
           <div class="order-actions sticky-order">
             <button type="button" id="order-button" class="btn btn-primary">Заказать</button>
             <button type="button" id="copy-button" class="btn btn-secondary">Скопировать текст заказа</button>
@@ -106,33 +123,79 @@
     <dialog id="wizard-modal" class="wizard-modal">
       <article>
         <button type="button" id="wizard-close" class="modal-close" aria-label="Закрыть">×</button>
-        <h3>Пройдите короткий опрос — мы соберём букет специально для вас.</h3>
-        <p id="wizard-progress" class="muted"></p>
-        <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
-        <p id="wizard-question" class="wizard-question"></p>
+        <div class="wizard-scroll">
+          <h3>Пройдите короткий опрос — мы соберём букет специально для вас.</h3>
+          <p id="wizard-progress" class="muted"></p>
+          <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
+          <p id="wizard-question" class="wizard-question"></p>
 
-        <label class="wizard-field" id="wizard-input-wrap">
-          <input type="text" id="wizard-input" placeholder="Введите ответ" />
-          <textarea id="wizard-textarea" class="hidden" rows="3" placeholder="Введите ответ"></textarea>
-          <select id="wizard-select" class="hidden"></select>
-        </label>
+          <label class="wizard-field" id="wizard-input-wrap">
+            <input type="text" id="wizard-input" placeholder="Введите ответ" />
+            <textarea id="wizard-textarea" class="hidden" rows="3" placeholder="Введите ответ"></textarea>
+            <select id="wizard-select" class="hidden"></select>
+          </label>
 
-        <div class="wizard-actions">
+          <div id="wizard-final" class="wizard-final hidden">
+            <p class="picker-label">Текст заявки:</p>
+            <textarea id="wizard-preview" rows="8" readonly></textarea>
+            <p id="wizard-hint" class="muted wizard-hint"></p>
+          </div>
+        </div>
+
+        <div id="wizard-step-actions" class="wizard-actions wizard-sticky-actions">
           <button type="button" id="wizard-skip" class="btn btn-secondary">Пропустить</button>
           <button type="button" id="wizard-next" class="btn btn-primary">Далее</button>
         </div>
 
-        <section id="wizard-final" class="wizard-final hidden">
-          <p class="picker-label">Текст заявки:</p>
-          <textarea id="wizard-preview" rows="8" readonly></textarea>
+        <div id="wizard-final-actions" class="wizard-sticky-actions hidden">
           <button type="button" id="wizard-copy" class="btn btn-secondary">Скопировать текст</button>
-          <p id="wizard-hint" class="muted wizard-hint"></p>
-          <div class="wizard-contact-actions">
-            <button type="button" id="wizard-telegram" class="btn btn-secondary">Telegram</button>
-            <button type="button" id="wizard-whatsapp" class="btn btn-primary">WhatsApp</button>
-            <button type="button" id="wizard-call" class="btn btn-secondary">Позвонить</button>
+          <button type="button" id="wizard-contact" class="btn btn-primary">Связаться</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="mix-modal" class="wizard-modal">
+      <article>
+        <button type="button" id="mix-close" class="modal-close" aria-label="Закрыть">×</button>
+        <div class="wizard-scroll">
+          <h3>Конструктор микс-букета</h3>
+          <p class="muted">Соберём красивый микс в выбранной гамме. Точный вид может немного отличаться.</p>
+
+          <div class="picker-row">
+            <p class="picker-label">Количество</p>
+            <div id="mix-qty" class="qty-grid"></div>
           </div>
-        </section>
+
+          <div class="picker-row">
+            <p class="picker-label">Цвета (1–4)</p>
+            <div id="mix-colors" class="swatches"></div>
+            <p id="mix-colors-text" class="muted"></p>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Стиль</p>
+            <div id="mix-styles" class="style-grid"></div>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Упаковка</p>
+            <div id="mix-wrap" class="segment" role="group">
+              <button type="button" data-wrap="wrap" aria-pressed="false">С крафтовой бумагой</button>
+              <button type="button" data-wrap="nowrap" aria-pressed="true">Без бумаги</button>
+            </div>
+          </div>
+
+          <div class="mix-example">
+            <img id="mix-example-img" src="" alt="Пример микс-букета" />
+            <p class="muted">Пример. Соберём микс в выбранных цветах — точный вид может немного отличаться.</p>
+          </div>
+
+          <div id="mix-summary" class="mix-summary"></div>
+        </div>
+
+        <div class="wizard-sticky-actions">
+          <button type="button" id="mix-order" class="btn btn-primary">Заказать микс</button>
+        </div>
       </article>
     </dialog>
 
@@ -149,11 +212,21 @@
       </article>
     </dialog>
 
+    <dialog id="contact-sheet" class="contact-sheet">
+      <article>
+        <h3>Связаться</h3>
+        <div class="messenger-actions">
+          <button type="button" id="sheet-telegram" class="btn btn-secondary">Telegram</button>
+          <button type="button" id="sheet-whatsapp" class="btn btn-primary">WhatsApp</button>
+          <button type="button" id="sheet-call" class="btn btn-secondary">Позвонить</button>
+        </div>
+      </article>
+    </dialog>
+
     <template id="card-template">
       <article class="card">
-        <div class="card-media-wrap">
-          <img class="card-media img-fade" src="" alt="" loading="lazy" />
-        </div>
+        <span class="badge">Под заказ</span>
+        <div class="card-media-wrap"><img class="card-media img-fade" src="" alt="" loading="lazy" /></div>
         <p class="image-hint hidden">Фото временно отсутствует</p>
         <div class="card-body">
           <h3 class="card-title"></h3>
@@ -166,22 +239,19 @@
 
           <div class="picker-row compact">
             <p class="picker-label">Упаковка</p>
-            <div class="segment" role="group" aria-label="Выбор упаковки">
+            <div class="segment" role="group">
               <button type="button" data-wrap="wrap" aria-pressed="false">С крафтовой бумагой</button>
               <button type="button" data-wrap="nowrap" aria-pressed="true">Без бумаги</button>
             </div>
           </div>
 
-          <div class="card-footer">
-            <p class="card-price"></p>
-            <button type="button" class="btn btn-small">Открыть</button>
-          </div>
+          <p class="card-price"></p>
+          <button type="button" class="btn btn-primary card-order">Заказать</button>
         </div>
       </article>
     </template>
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite">Текст заявки скопирован</div>
-
     <script src="app.js" defer></script>
   </body>
 </html>

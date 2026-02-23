@@ -1,4 +1,5 @@
 const WRAP_ADDON = 200;
+const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
 
 const CONFIG = {
   shopName: "Тюльпаны",
@@ -27,15 +28,22 @@ const WIZARD_STEPS = [
   { key: "wishes", question: "Пожелания (опционально)", type: "textarea", placeholder: "Упаковка, открытка, лента, доставка..." },
 ];
 
-const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
+const MIX_QTY = [7, 9, 13, 21, 31, 51, 101];
+const MIX_STYLES = [
+  { key: "soft", label: "Нежный", image: "assets/mix_examples/soft.svg" },
+  { key: "bright", label: "Яркий", image: "assets/mix_examples/bright.svg" },
+  { key: "contrast", label: "Контрастный", image: "assets/mix_examples/contrast.svg" },
+  { key: "florist_choice", label: "Доверяю флористу", image: "assets/mix_examples/florist_choice.svg" },
+];
 
 const state = {
   products: [],
   currentProduct: null,
   selectionById: {},
-  filters: { search: "", price: "all", category: "all" },
+  filters: { search: "", price: "all", category: "all", occasion: "" },
   pendingMessage: "",
   wizard: { step: 0, answers: {}, finalMode: false },
+  mix: { qty: 21, colors: ["white", "pink"], style: "florist_choice", wrapMode: "nowrap" },
 };
 
 const el = {
@@ -49,8 +57,13 @@ const el = {
   categorySelect: document.getElementById("category"),
   priceButtons: document.querySelectorAll("[data-price]"),
   cardTemplate: document.getElementById("card-template"),
+  occasionButtons: document.querySelectorAll("#occasions button"),
+  occasionIndicator: document.getElementById("occasion-indicator"),
+
   openWizard: document.getElementById("open-wizard"),
   contactFlorists: document.getElementById("contact-florists"),
+  openMix: document.getElementById("open-mix"),
+  contactFloristsMix: document.getElementById("contact-florists-mix"),
 
   modal: document.getElementById("product-modal"),
   modalClose: document.getElementById("modal-close"),
@@ -79,11 +92,22 @@ const el = {
   wizardNext: document.getElementById("wizard-next"),
   wizardFinal: document.getElementById("wizard-final"),
   wizardPreview: document.getElementById("wizard-preview"),
-  wizardCopy: document.getElementById("wizard-copy"),
   wizardHint: document.getElementById("wizard-hint"),
-  wizardTelegram: document.getElementById("wizard-telegram"),
-  wizardWhatsapp: document.getElementById("wizard-whatsapp"),
-  wizardCall: document.getElementById("wizard-call"),
+  wizardStepActions: document.getElementById("wizard-step-actions"),
+  wizardFinalActions: document.getElementById("wizard-final-actions"),
+  wizardCopy: document.getElementById("wizard-copy"),
+  wizardContact: document.getElementById("wizard-contact"),
+
+  mixModal: document.getElementById("mix-modal"),
+  mixClose: document.getElementById("mix-close"),
+  mixQty: document.getElementById("mix-qty"),
+  mixColors: document.getElementById("mix-colors"),
+  mixColorsText: document.getElementById("mix-colors-text"),
+  mixStyles: document.getElementById("mix-styles"),
+  mixWrap: document.getElementById("mix-wrap"),
+  mixExampleImg: document.getElementById("mix-example-img"),
+  mixSummary: document.getElementById("mix-summary"),
+  mixOrder: document.getElementById("mix-order"),
 
   messengerModal: document.getElementById("messenger-modal"),
   messengerTitle: document.getElementById("messenger-title"),
@@ -93,33 +117,17 @@ const el = {
   messengerWhatsapp: document.getElementById("messenger-whatsapp"),
   messengerCall: document.getElementById("messenger-call"),
 
+  contactSheet: document.getElementById("contact-sheet"),
+  sheetTelegram: document.getElementById("sheet-telegram"),
+  sheetWhatsapp: document.getElementById("sheet-whatsapp"),
+  sheetCall: document.getElementById("sheet-call"),
+
   toast: document.getElementById("toast"),
 };
 
-function formatPrice(value) {
-  return `${new Intl.NumberFormat("ru-RU").format(value)} ${CONFIG.currency}`;
-}
-function normalizeImagePath(path) {
-  if (!path) return PLACEHOLDER_IMAGE;
-  return encodeURI(String(path).trim().replace(/\\/g, "/"));
-}
-function getTelegramLink() {
-  if (CONFIG.telegramUsernameOrLink.startsWith("http")) return CONFIG.telegramUsernameOrLink;
-  return `https://t.me/${CONFIG.telegramUsernameOrLink.replace("@", "")}`;
-}
-function getSelection(productId) {
-  if (!state.selectionById[productId]) state.selectionById[productId] = { color: "white", wrapMode: "nowrap" };
-  return state.selectionById[productId];
-}
-function getColorMeta(colorKey) {
-  return COLOR_OPTIONS.find((c) => c.key === colorKey) || COLOR_OPTIONS[0];
-}
-function getCurrentPrice(product, selection) {
-  return selection.wrapMode === "wrap" ? product.price + WRAP_ADDON : product.price;
-}
-function resolveImage(product, selection) {
-  return product.images?.[selection.color]?.[selection.wrapMode] || PLACEHOLDER_IMAGE;
-}
+const formatPrice = (v) => `${new Intl.NumberFormat("ru-RU").format(v)} ${CONFIG.currency}`;
+const telegramLink = () => (CONFIG.telegramUsernameOrLink.startsWith("http") ? CONFIG.telegramUsernameOrLink : `https://t.me/${CONFIG.telegramUsernameOrLink.replace("@", "")}`);
+const normalizeImagePath = (p) => encodeURI((p || PLACEHOLDER_IMAGE).trim().replace(/\\/g, "/"));
 
 function showToast(text) {
   el.toast.textContent = text;
@@ -133,37 +141,256 @@ async function copyText(text, notify = true) {
     if (notify) showToast("Текст заявки скопирован");
     return true;
   } catch {
-    if (notify) showToast("Не удалось скопировать — используйте кнопку «Скопировать текст»");
+    if (notify) showToast("Не удалось скопировать");
     return false;
   }
 }
 
 function updateImageWithFade(img, hintNode, srcPath) {
   const finalSrc = normalizeImagePath(srcPath);
-  const fallbackSrc = normalizeImagePath(PLACEHOLDER_IMAGE);
   img.style.opacity = "0";
-  const temp = new Image();
-  temp.onload = () => {
+  const probe = new Image();
+  probe.onload = () => {
     img.src = finalSrc;
     img.style.opacity = "1";
-    hintNode?.classList.toggle("hidden", true);
+    hintNode?.classList.add("hidden");
   };
-  temp.onerror = () => {
-    img.src = fallbackSrc;
+  probe.onerror = () => {
+    img.src = PLACEHOLDER_IMAGE;
     img.style.opacity = "1";
-    hintNode?.classList.toggle("hidden", false);
+    hintNode?.classList.remove("hidden");
   };
-  temp.src = finalSrc;
+  probe.src = finalSrc;
 }
 
-function makeOrderText(product, selection) {
-  const colorName = getColorMeta(selection.color).name;
-  const wrapLabel = selection.wrapMode === "wrap" ? "крафт" : "без бумаги";
-  const price = formatPrice(getCurrentPrice(product, selection));
-  return `Здравствуйте! Хочу заказать: ${product.title}. Цвет: ${colorName}. Упаковка: ${wrapLabel}. Цена: ${price}. Дата/время: __. Адрес: __.`;
+function getSelection(id) {
+  if (!state.selectionById[id]) state.selectionById[id] = { color: "white", wrapMode: "nowrap" };
+  return state.selectionById[id];
 }
 
-function makeWizardRequestText() {
+function getColorMeta(key) {
+  return COLOR_OPTIONS.find((c) => c.key === key) || COLOR_OPTIONS[0];
+}
+
+function getCurrentPrice(product, selection) {
+  return selection.wrapMode === "wrap" ? product.price + WRAP_ADDON : product.price;
+}
+
+function resolveImage(product, selection) {
+  return product.images?.[selection.color]?.[selection.wrapMode] || PLACEHOLDER_IMAGE;
+}
+
+function renderHeader() {
+  el.shopTitle.textContent = `${CONFIG.shopName} • ${CONFIG.city}`;
+  el.shopMeta.textContent = CONFIG.phone;
+  el.contactLinks.innerHTML = `
+    <a href="${CONFIG.callLink}">Позвонить</a>
+    <a href="https://wa.me/${CONFIG.whatsappNumber}" target="_blank" rel="noreferrer">WhatsApp</a>
+    <a href="${telegramLink()}" target="_blank" rel="noreferrer">Telegram</a>
+  `;
+}
+
+function applySegmentState(container, mode) {
+  container.querySelectorAll("button[data-wrap]").forEach((button) => {
+    const active = button.dataset.wrap === mode;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function renderSwatches(container, selected, onSelect, maxSelect = 1) {
+  container.innerHTML = "";
+  COLOR_OPTIONS.forEach((c) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "swatch";
+    b.style.background = c.swatch;
+    b.dataset.colorKey = c.key;
+    if (Array.isArray(selected) ? selected.includes(c.key) : selected === c.key) b.classList.add("is-selected");
+    if (c.border) b.style.borderColor = "#D0D0D0";
+    b.setAttribute("aria-label", `Цвет: ${c.name}`);
+    b.addEventListener("click", () => onSelect(c.key, maxSelect));
+    container.appendChild(b);
+  });
+}
+
+function makeOrderText(product, sel) {
+  return `Здравствуйте! Хочу заказать: ${product.title}. Цвет: ${getColorMeta(sel.color).name}. Упаковка: ${sel.wrapMode === "wrap" ? "крафт" : "без бумаги"}. Цена: ${formatPrice(getCurrentPrice(product, sel))}. Дата/время: __. Адрес: __.`;
+}
+
+function openMessengerChoice(title, desc, message) {
+  state.pendingMessage = message || "Здравствуйте!";
+  el.messengerTitle.textContent = title;
+  el.messengerDescription.textContent = desc || "";
+  el.messengerModal.showModal();
+}
+
+function openChannel(kind, text = state.pendingMessage) {
+  const encoded = encodeURIComponent(text || "Здравствуйте!");
+  const links = {
+    whatsapp: `https://wa.me/${CONFIG.whatsappNumber}?text=${encoded}`,
+    telegram: `${telegramLink()}?text=${encoded}`,
+    call: CONFIG.callLink,
+  };
+  window.open(links[kind], "_blank", "noopener");
+}
+
+function productQty(product) {
+  const m = product.title.match(/\d+/);
+  return m ? Number(m[0]) : 1;
+}
+
+function occasionMatch(product) {
+  const q = productQty(product);
+  switch (state.filters.occasion) {
+    case "birthday": return q >= 21;
+    case "date": return q <= 21;
+    case "mom": return q >= 13 && q <= 31;
+    case "march8": return q >= 31;
+    default: return true;
+  }
+}
+
+function filteredProducts() {
+  return state.products.filter((p) => {
+    const s = getSelection(p.id);
+    const price = getCurrentPrice(p, s);
+    const inSearch = p.title.toLowerCase().includes(state.filters.search.toLowerCase());
+    const inCategory = state.filters.category === "all" || p.category === state.filters.category;
+    const inOccasion = occasionMatch(p);
+    let inPrice = true;
+    if (state.filters.price === "2000") inPrice = price <= 2000;
+    if (state.filters.price === "4000") inPrice = price <= 4000;
+    if (state.filters.price === "4000+") inPrice = price >= 4000;
+    return inSearch && inCategory && inOccasion && inPrice;
+  });
+}
+
+function createCard(product) {
+  const frag = el.cardTemplate.content.cloneNode(true);
+  const img = frag.querySelector(".card-media");
+  const hint = frag.querySelector(".image-hint");
+  const title = frag.querySelector(".card-title");
+  const short = frag.querySelector(".card-short");
+  const price = frag.querySelector(".card-price");
+  const swatches = frag.querySelector(".swatches");
+  const colorName = frag.querySelector(".selected-color");
+  const segment = frag.querySelector(".segment");
+  const orderBtn = frag.querySelector(".card-order");
+
+  title.textContent = product.title;
+  short.textContent = product.short;
+
+  const rerender = () => {
+    const sel = getSelection(product.id);
+    colorName.textContent = getColorMeta(sel.color).name;
+    price.textContent = formatPrice(getCurrentPrice(product, sel));
+    updateImageWithFade(img, hint, resolveImage(product, sel));
+    renderSwatches(swatches, sel.color, (color) => {
+      getSelection(product.id).color = color;
+      rerender();
+      if (state.currentProduct?.id === product.id) renderProductModal();
+    });
+    applySegmentState(segment, sel.wrapMode);
+  };
+
+  segment.querySelectorAll("button[data-wrap]").forEach((b) => {
+    b.addEventListener("click", () => {
+      getSelection(product.id).wrapMode = b.dataset.wrap;
+      rerender();
+      if (state.currentProduct?.id === product.id) renderProductModal();
+    });
+  });
+
+  orderBtn.addEventListener("click", () => {
+    state.currentProduct = product;
+    renderProductModal();
+    el.modal.showModal();
+  });
+
+  rerender();
+  return frag;
+}
+
+function renderCatalog() {
+  const list = filteredProducts();
+  el.catalogGrid.innerHTML = "";
+  list.forEach((p) => el.catalogGrid.appendChild(createCard(p)));
+  el.resultsCount.textContent = `Найдено: ${list.length}`;
+  el.emptyState.classList.toggle("hidden", list.length > 0);
+}
+
+function renderOccasionIndicator() {
+  const map = { birthday: "День рождения", date: "Свидание", mom: "Маме", march8: "8 марта", just: "Просто так" };
+  if (!state.filters.occasion || state.filters.occasion === "just") {
+    el.occasionIndicator.classList.add("hidden");
+    return;
+  }
+  el.occasionIndicator.classList.remove("hidden");
+  el.occasionIndicator.innerHTML = `Показано для: <strong>${map[state.filters.occasion]}</strong> <button id="occasion-reset" type="button">Сбросить</button>`;
+  el.occasionIndicator.querySelector("#occasion-reset").addEventListener("click", () => {
+    state.filters.occasion = "";
+    el.occasionButtons.forEach((b) => b.classList.remove("is-active"));
+    renderOccasionIndicator();
+    renderCatalog();
+  });
+}
+
+function renderProductModal() {
+  const p = state.currentProduct;
+  if (!p) return;
+  const sel = getSelection(p.id);
+  el.modalCategory.textContent = p.category;
+  el.modalTitle.textContent = p.title;
+  el.modalPrice.textContent = formatPrice(getCurrentPrice(p, sel));
+  el.modalDescription.textContent = p.description;
+  el.modalColorName.textContent = getColorMeta(sel.color).name;
+  updateImageWithFade(el.modalImage, el.modalMissingHint, resolveImage(p, sel));
+  renderSwatches(el.modalSwatches, sel.color, (color) => {
+    getSelection(p.id).color = color;
+    renderProductModal();
+    renderCatalog();
+  });
+  applySegmentState(el.modalWrapToggle, sel.wrapMode);
+}
+
+function resetWizard() {
+  state.wizard = { step: 0, answers: {}, finalMode: false };
+  el.wizardHint.textContent = "";
+}
+
+function readWizardValue(step) {
+  if (step.type === "select") return el.wizardSelect.value;
+  if (step.type === "textarea") return el.wizardTextarea.value.trim();
+  return el.wizardInput.value.trim();
+}
+
+function fillWizardField(step) {
+  const v = state.wizard.answers[step.key] || "";
+  el.wizardInput.classList.toggle("hidden", step.type !== "text");
+  el.wizardTextarea.classList.toggle("hidden", step.type !== "textarea");
+  el.wizardSelect.classList.toggle("hidden", step.type !== "select");
+  if (step.type === "select") {
+    el.wizardSelect.innerHTML = "";
+    step.options.forEach((o) => {
+      const opt = document.createElement("option");
+      opt.value = o;
+      opt.textContent = o;
+      el.wizardSelect.appendChild(opt);
+    });
+    el.wizardSelect.value = v || step.options[0];
+    return;
+  }
+  if (step.type === "textarea") {
+    el.wizardTextarea.value = v;
+    el.wizardTextarea.placeholder = step.placeholder || "Введите ответ";
+    return;
+  }
+  el.wizardInput.value = v;
+  el.wizardInput.placeholder = step.placeholder || "Введите ответ";
+}
+
+function makeWizardText() {
   const a = state.wizard.answers;
   const lines = ["Здравствуйте! Хочу индивидуальный букет."];
   if (a.forWhom) lines.push(`Для кого: ${a.forWhom}`);
@@ -175,273 +402,114 @@ function makeWizardRequestText() {
   return lines.join("\n");
 }
 
-function renderHeader() {
-  el.shopTitle.textContent = `${CONFIG.shopName} • ${CONFIG.city}`;
-  el.shopMeta.textContent = CONFIG.phone;
-  el.contactLinks.innerHTML = `
-    <a href="${CONFIG.callLink}">Позвонить</a>
-    <a href="https://wa.me/${CONFIG.whatsappNumber}" target="_blank" rel="noreferrer">WhatsApp</a>
-    <a href="${getTelegramLink()}" target="_blank" rel="noreferrer">Telegram</a>
-  `;
-}
+function renderWizard() {
+  const final = state.wizard.finalMode;
+  el.wizardFinal.classList.toggle("hidden", !final);
+  el.wizardInputWrap.classList.toggle("hidden", final);
+  el.wizardQuestion.classList.toggle("hidden", final);
+  el.wizardStepActions.classList.toggle("hidden", final);
+  el.wizardFinalActions.classList.toggle("hidden", !final);
 
-function applySegmentState(container, wrapMode) {
-  container.querySelectorAll("button[data-wrap]").forEach((button) => {
-    const active = button.dataset.wrap === wrapMode;
-    button.classList.toggle("is-active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
-}
-
-function renderSwatches(container, selection, onSelect) {
-  container.innerHTML = "";
-  COLOR_OPTIONS.forEach((color) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "swatch";
-    if (selection.color === color.key) button.classList.add("is-selected");
-    button.setAttribute("aria-label", `Цвет: ${color.name}`);
-    button.style.background = color.swatch;
-    button.dataset.colorKey = color.key;
-    if (color.border) button.style.borderColor = "#D0D0D0";
-    button.addEventListener("click", () => onSelect(color.key));
-    container.appendChild(button);
-  });
-}
-
-function createCard(product) {
-  const fragment = el.cardTemplate.content.cloneNode(true);
-  const card = fragment.querySelector(".card");
-  const img = fragment.querySelector(".card-media");
-  const hint = fragment.querySelector(".image-hint");
-  const title = fragment.querySelector(".card-title");
-  const short = fragment.querySelector(".card-short");
-  const price = fragment.querySelector(".card-price");
-  const swatches = fragment.querySelector(".swatches");
-  const colorName = fragment.querySelector(".selected-color");
-  const segment = fragment.querySelector(".segment");
-  const openBtn = fragment.querySelector(".btn-small");
-
-  title.textContent = product.title;
-  short.textContent = product.short;
-
-  const updateCard = () => {
-    const selection = getSelection(product.id);
-    colorName.textContent = getColorMeta(selection.color).name;
-    price.textContent = formatPrice(getCurrentPrice(product, selection));
-    updateImageWithFade(img, hint, resolveImage(product, selection));
-    renderSwatches(swatches, selection, (color) => {
-      getSelection(product.id).color = color;
-      updateCard();
-      if (state.currentProduct?.id === product.id) renderModal();
-    });
-    applySegmentState(segment, selection.wrapMode);
-  };
-
-  segment.querySelectorAll("button[data-wrap]").forEach((button) => {
-    button.addEventListener("click", () => {
-      getSelection(product.id).wrapMode = button.dataset.wrap;
-      updateCard();
-      if (state.currentProduct?.id === product.id) renderModal();
-    });
-  });
-
-  openBtn.addEventListener("click", () => {
-    state.currentProduct = product;
-    renderModal();
-    el.modal.showModal();
-  });
-
-  card.style.cursor = "pointer";
-  updateCard();
-  return fragment;
-}
-
-function filteredProducts() {
-  return state.products.filter((product) => {
-    const search = product.title.toLowerCase().includes(state.filters.search.toLowerCase());
-    const category = state.filters.category === "all" || product.category === state.filters.category;
-    const activePrice = getCurrentPrice(product, getSelection(product.id));
-    let priceOk = true;
-    if (state.filters.price === "2000") priceOk = activePrice <= 2000;
-    if (state.filters.price === "4000") priceOk = activePrice <= 4000;
-    if (state.filters.price === "4000+") priceOk = activePrice >= 4000;
-    return search && category && priceOk;
-  });
-}
-
-function renderCatalog() {
-  const products = filteredProducts();
-  el.catalogGrid.innerHTML = "";
-  products.forEach((p) => el.catalogGrid.appendChild(createCard(p)));
-  el.resultsCount.textContent = `Найдено: ${products.length}`;
-  el.emptyState.classList.toggle("hidden", products.length > 0);
-}
-
-function populateCategories() {
-  const categories = [...new Set(state.products.map((p) => p.category))];
-  categories.forEach((cat) => {
-    const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    el.categorySelect.appendChild(option);
-  });
-}
-
-function renderModal() {
-  const product = state.currentProduct;
-  if (!product) return;
-  const selection = getSelection(product.id);
-
-  el.modalCategory.textContent = product.category;
-  el.modalTitle.textContent = product.title;
-  el.modalPrice.textContent = formatPrice(getCurrentPrice(product, selection));
-  el.modalDescription.textContent = product.description;
-  el.modalColorName.textContent = getColorMeta(selection.color).name;
-  el.modalImage.alt = product.title;
-  updateImageWithFade(el.modalImage, el.modalMissingHint, resolveImage(product, selection));
-
-  renderSwatches(el.modalSwatches, selection, (color) => {
-    getSelection(product.id).color = color;
-    renderModal();
-    renderCatalog();
-  });
-  applySegmentState(el.modalWrapToggle, selection.wrapMode);
-}
-
-function openMessengerChoice(title, description, message = "Здравствуйте!") {
-  state.pendingMessage = message;
-  el.messengerTitle.textContent = title;
-  el.messengerDescription.textContent = description;
-  el.messengerModal.showModal();
-}
-
-function openMessenger(kind) {
-  const text = encodeURIComponent(state.pendingMessage || "Здравствуйте!");
-  const links = {
-    whatsapp: `https://wa.me/${CONFIG.whatsappNumber}?text=${text}`,
-    telegram: `${getTelegramLink()}?text=${text}`,
-    call: CONFIG.callLink,
-  };
-  window.open(links[kind], "_blank", "noopener");
-  el.messengerModal.close();
-}
-
-function resetWizard() {
-  state.wizard.step = 0;
-  state.wizard.answers = {};
-  state.wizard.finalMode = false;
-}
-
-function readWizardValue(step) {
-  if (step.type === "select") return el.wizardSelect.value;
-  if (step.type === "textarea") return el.wizardTextarea.value.trim();
-  return el.wizardInput.value.trim();
-}
-
-function fillWizardField(step) {
-  const value = state.wizard.answers[step.key] || "";
-  el.wizardInput.classList.toggle("hidden", step.type !== "text");
-  el.wizardTextarea.classList.toggle("hidden", step.type !== "textarea");
-  el.wizardSelect.classList.toggle("hidden", step.type !== "select");
-
-  if (step.type === "select") {
-    el.wizardSelect.innerHTML = "";
-    step.options.forEach((optionText) => {
-      const option = document.createElement("option");
-      option.value = optionText;
-      option.textContent = optionText;
-      el.wizardSelect.appendChild(option);
-    });
-    el.wizardSelect.value = value || step.options[0];
-    el.wizardSelect.focus();
-    return;
-  }
-
-  if (step.type === "textarea") {
-    el.wizardTextarea.value = value;
-    el.wizardTextarea.placeholder = step.placeholder || "Введите ответ";
-    el.wizardTextarea.focus();
-    return;
-  }
-
-  el.wizardInput.value = value;
-  el.wizardInput.placeholder = step.placeholder || "Введите ответ";
-  el.wizardInput.focus();
-}
-
-function renderWizardStep() {
-  const step = WIZARD_STEPS[state.wizard.step];
-  const index = state.wizard.step + 1;
-  const total = WIZARD_STEPS.length;
-  const finalMode = state.wizard.finalMode;
-
-  el.wizardFinal.classList.toggle("hidden", !finalMode);
-  el.wizardInputWrap.classList.toggle("hidden", finalMode);
-  el.wizardQuestion.classList.toggle("hidden", finalMode);
-  el.wizardSkip.classList.toggle("hidden", finalMode);
-  el.wizardNext.classList.toggle("hidden", finalMode);
-
-  if (finalMode) {
+  if (final) {
     el.wizardProgress.textContent = "Готово";
     el.wizardProgressFill.style.width = "100%";
-    el.wizardPreview.value = makeWizardRequestText();
+    el.wizardPreview.value = makeWizardText();
     return;
   }
 
-  el.wizardProgress.textContent = `Шаг ${index} из ${total}`;
-  el.wizardProgressFill.style.width = `${(index / total) * 100}%`;
+  const step = WIZARD_STEPS[state.wizard.step];
+  el.wizardProgress.textContent = `Шаг ${state.wizard.step + 1} из ${WIZARD_STEPS.length}`;
+  el.wizardProgressFill.style.width = `${((state.wizard.step + 1) / WIZARD_STEPS.length) * 100}%`;
   el.wizardQuestion.textContent = step.question;
   fillWizardField(step);
 }
 
-function nextWizardStep(skip = false) {
+function nextWizard(skip = false) {
   const step = WIZARD_STEPS[state.wizard.step];
   if (!skip) state.wizard.answers[step.key] = readWizardValue(step);
-
-  if (state.wizard.step === WIZARD_STEPS.length - 1) {
+  if (state.wizard.step >= WIZARD_STEPS.length - 1) {
     state.wizard.finalMode = true;
-    renderWizardStep();
+    renderWizard();
     return;
   }
-
   state.wizard.step += 1;
-  renderWizardStep();
+  renderWizard();
 }
 
-function startWizard() {
-  resetWizard();
-  el.wizardHint.textContent = "";
-  renderWizardStep();
-  el.wizardModal.showModal();
+function mixUnitPrice(qty) {
+  if (qty >= 101) return 115;
+  if (qty >= 51) return 120;
+  return 135;
 }
 
-async function copyOrderText() {
-  if (!state.currentProduct) return;
-  const text = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
-  const ok = await copyText(text, false);
-  el.copyButton.textContent = ok ? "Текст скопирован" : "Скопируйте вручную";
-  setTimeout(() => (el.copyButton.textContent = "Скопировать текст заказа"), 1200);
+function currentMixPrice() {
+  const nowrap = mixUnitPrice(state.mix.qty) * state.mix.qty;
+  return state.mix.wrapMode === "wrap" ? nowrap + WRAP_ADDON : nowrap;
 }
 
-async function wizardContact(kind) {
-  const text = el.wizardPreview.value || makeWizardRequestText();
-  if (kind !== "call") await copyText(text);
+function currentMixStyleMeta() {
+  return MIX_STYLES.find((s) => s.key === state.mix.style) || MIX_STYLES[0];
+}
 
-  if (kind === "telegram") {
-    el.wizardHint.textContent = "Вставьте текст заявки в чат (он уже скопирован).";
-    window.open(getTelegramLink(), "_blank", "noopener");
-    return;
-  }
+function renderMix() {
+  el.mixQty.innerHTML = "";
+  MIX_QTY.forEach((q) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = q;
+    b.classList.toggle("is-active", state.mix.qty === q);
+    b.addEventListener("click", () => {
+      state.mix.qty = q;
+      renderMix();
+    });
+    el.mixQty.appendChild(b);
+  });
 
-  if (kind === "whatsapp") {
-    el.wizardHint.textContent = "Вставьте текст заявки в чат (он уже скопирован).";
-    window.open(`https://wa.me/${CONFIG.whatsappNumber}`, "_blank", "noopener");
-    return;
-  }
+  renderSwatches(el.mixColors, state.mix.colors, (key) => {
+    const i = state.mix.colors.indexOf(key);
+    if (i >= 0) state.mix.colors.splice(i, 1);
+    else if (state.mix.colors.length < 4) state.mix.colors.push(key);
+    if (!state.mix.colors.length) state.mix.colors = ["white"];
+    renderMix();
+  }, 4);
 
-  el.wizardHint.textContent = "Можете продиктовать заявку по телефону или отправить текст в мессенджер.";
-  window.open(CONFIG.callLink, "_blank", "noopener");
+  el.mixColorsText.textContent = `Выбрано: ${state.mix.colors.map((k) => getColorMeta(k).name).join(", ")}`;
+
+  el.mixStyles.innerHTML = "";
+  MIX_STYLES.forEach((s) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = s.label;
+    b.classList.toggle("is-active", state.mix.style === s.key);
+    b.addEventListener("click", () => {
+      state.mix.style = s.key;
+      renderMix();
+    });
+    el.mixStyles.appendChild(b);
+  });
+
+  applySegmentState(el.mixWrap, state.mix.wrapMode);
+  el.mixExampleImg.src = normalizeImagePath(currentMixStyleMeta().image);
+  el.mixSummary.innerHTML = `
+    <strong>Итого</strong><br />
+    Количество: ${state.mix.qty}<br />
+    Цвета: ${state.mix.colors.map((k) => getColorMeta(k).name).join(", ")}<br />
+    Стиль: ${currentMixStyleMeta().label}<br />
+    Упаковка: ${state.mix.wrapMode === "wrap" ? "С крафтовой бумагой" : "Без бумаги"}<br />
+    Цена: <strong>${formatPrice(currentMixPrice())}</strong>
+  `;
+}
+
+function mixText() {
+  return [
+    "Здравствуйте! Хочу микс-букет из тюльпанов.",
+    `Количество: ${state.mix.qty}`,
+    `Цвета: ${state.mix.colors.map((k) => getColorMeta(k).name).join(", ")}`,
+    `Стиль: ${currentMixStyleMeta().label}`,
+    `Упаковка: ${state.mix.wrapMode === "wrap" ? "крафт" : "без бумаги"}`,
+    `Цена: ${formatPrice(currentMixPrice())}`,
+    "Спасибо!",
+  ].join("\n");
 }
 
 function bindEvents() {
@@ -453,46 +521,87 @@ function bindEvents() {
     state.filters.category = e.target.value;
     renderCatalog();
   });
-  el.priceButtons.forEach((button) => button.addEventListener("click", () => {
-    el.priceButtons.forEach((b) => b.classList.remove("is-active"));
-    button.classList.add("is-active");
-    state.filters.price = button.dataset.price;
+  el.priceButtons.forEach((b) => b.addEventListener("click", () => {
+    el.priceButtons.forEach((x) => x.classList.remove("is-active"));
+    b.classList.add("is-active");
+    state.filters.price = b.dataset.price;
+    renderCatalog();
+  }));
+
+  el.occasionButtons.forEach((b) => b.addEventListener("click", () => {
+    el.occasionButtons.forEach((x) => x.classList.remove("is-active"));
+    b.classList.add("is-active");
+    state.filters.occasion = b.dataset.occasion;
+    renderOccasionIndicator();
     renderCatalog();
   }));
 
   el.modalClose.addEventListener("click", () => el.modal.close());
-  el.modalWrapToggle.querySelectorAll("button[data-wrap]").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (!state.currentProduct) return;
-      getSelection(state.currentProduct.id).wrapMode = button.dataset.wrap;
-      renderModal();
-      renderCatalog();
-    });
-  });
-
+  el.modalWrapToggle.querySelectorAll("button[data-wrap]").forEach((b) => b.addEventListener("click", () => {
+    if (!state.currentProduct) return;
+    getSelection(state.currentProduct.id).wrapMode = b.dataset.wrap;
+    renderProductModal();
+    renderCatalog();
+  }));
   el.orderButton.addEventListener("click", () => {
     if (!state.currentProduct) return;
-    const message = makeOrderText(state.currentProduct, getSelection(state.currentProduct.id));
-    openMessengerChoice("Куда написать?", "Выберите удобный канал для заказа.", message);
+    openMessengerChoice("Куда написать?", "Выберите удобный канал для заказа.", makeOrderText(state.currentProduct, getSelection(state.currentProduct.id)));
   });
-  el.copyButton.addEventListener("click", copyOrderText);
-
-  el.openWizard.addEventListener("click", startWizard);
-  el.contactFlorists.addEventListener("click", () => {
-    openMessengerChoice("Связаться", "Выберите удобный канал для связи с флористом.", "Здравствуйте! Нужна консультация по индивидуальному букету.");
+  el.copyButton.addEventListener("click", async () => {
+    if (!state.currentProduct) return;
+    const ok = await copyText(makeOrderText(state.currentProduct, getSelection(state.currentProduct.id)), false);
+    el.copyButton.textContent = ok ? "Текст скопирован" : "Скопируйте вручную";
+    setTimeout(() => (el.copyButton.textContent = "Скопировать текст заказа"), 1200);
   });
 
+  el.openWizard.addEventListener("click", () => {
+    resetWizard();
+    renderWizard();
+    el.wizardModal.showModal();
+  });
   el.wizardClose.addEventListener("click", () => el.wizardModal.close());
-  el.wizardNext.addEventListener("click", () => nextWizardStep(false));
-  el.wizardSkip.addEventListener("click", () => nextWizardStep(true));
-  el.wizardCopy.addEventListener("click", () => copyText(el.wizardPreview.value));
-  el.wizardTelegram.addEventListener("click", () => wizardContact("telegram"));
-  el.wizardWhatsapp.addEventListener("click", () => wizardContact("whatsapp"));
-  el.wizardCall.addEventListener("click", () => wizardContact("call"));
+  el.wizardNext.addEventListener("click", () => nextWizard(false));
+  el.wizardSkip.addEventListener("click", () => nextWizard(true));
+  el.wizardCopy.addEventListener("click", () => copyText(makeWizardText()));
+  el.wizardContact.addEventListener("click", () => el.contactSheet.showModal());
 
-  el.messengerTelegram.addEventListener("click", () => openMessenger("telegram"));
-  el.messengerWhatsapp.addEventListener("click", () => openMessenger("whatsapp"));
-  el.messengerCall.addEventListener("click", () => openMessenger("call"));
+  el.sheetTelegram.addEventListener("click", async () => {
+    await copyText(makeWizardText());
+    showToast("Вставьте текст заявки в чат");
+    openChannel("telegram", makeWizardText());
+  });
+  el.sheetWhatsapp.addEventListener("click", async () => {
+    await copyText(makeWizardText());
+    showToast("Вставьте текст заявки в чат");
+    openChannel("whatsapp", makeWizardText());
+  });
+  el.sheetCall.addEventListener("click", () => {
+    showToast("Можно продиктовать заявку по телефону");
+    openChannel("call", makeWizardText());
+  });
+
+  const openFloristContact = () => openMessengerChoice("Связаться", "Выберите удобный канал для связи с флористом.", "Здравствуйте! Нужна консультация по букету.");
+  el.contactFlorists.addEventListener("click", openFloristContact);
+  el.contactFloristsMix.addEventListener("click", openFloristContact);
+
+  el.openMix.addEventListener("click", () => {
+    renderMix();
+    el.mixModal.showModal();
+  });
+  el.mixClose.addEventListener("click", () => el.mixModal.close());
+  el.mixWrap.querySelectorAll("button[data-wrap]").forEach((b) => b.addEventListener("click", () => {
+    state.mix.wrapMode = b.dataset.wrap;
+    renderMix();
+  }));
+  el.mixOrder.addEventListener("click", async () => {
+    const text = mixText();
+    await copyText(text);
+    openMessengerChoice("Куда написать?", "Текст микс-заявки уже скопирован", text);
+  });
+
+  el.messengerTelegram.addEventListener("click", () => openChannel("telegram"));
+  el.messengerWhatsapp.addEventListener("click", () => openChannel("whatsapp"));
+  el.messengerCall.addEventListener("click", () => openChannel("call"));
   el.messengerClose.addEventListener("click", () => el.messengerModal.close());
 }
 
@@ -500,11 +609,17 @@ async function init() {
   renderHeader();
   bindEvents();
   try {
-    const response = await fetch("data/products.json", { cache: "no-store" });
-    state.products = await response.json();
-    state.products.forEach((product) => getSelection(product.id));
-    populateCategories();
+    const res = await fetch("data/products.json", { cache: "no-store" });
+    state.products = await res.json();
+    state.products.forEach((p) => getSelection(p.id));
+    [...new Set(state.products.map((p) => p.category))].forEach((cat) => {
+      const o = document.createElement("option");
+      o.value = cat;
+      o.textContent = cat;
+      el.categorySelect.appendChild(o);
+    });
     renderCatalog();
+    renderMix();
   } catch {
     el.catalogGrid.innerHTML = "<p class='empty-state'>Не удалось загрузить каталог.</p>";
   }
