@@ -63,6 +63,7 @@ const el = {
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
   openContact: document.getElementById("open-contact"),
+  guaranteesSection: document.getElementById("guarantees"),
   faqItems: document.querySelectorAll("#faq .faq-item"),
 
   modal: document.getElementById("product-modal"),
@@ -516,6 +517,22 @@ function mixText() {
   ].join("\n");
 }
 
+function dedupeGuarantees() {
+  const section = el.guaranteesSection;
+  if (!section) return;
+  const cards = section.querySelectorAll(".pill-card");
+  const seen = new Set();
+  cards.forEach((card) => {
+    const title = card.querySelector("h3")?.textContent?.trim().toLowerCase();
+    if (!title) return;
+    if (seen.has(title)) {
+      card.remove();
+      return;
+    }
+    seen.add(title);
+  });
+}
+
 function bindFaqAccordion() {
   if (!el.faqItems.length) return;
 
@@ -620,6 +637,7 @@ function bindEvents() {
 
 async function init() {
   renderHeader();
+  dedupeGuarantees();
   bindFaqAccordion();
   bindEvents();
   try {
