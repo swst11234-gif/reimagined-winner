@@ -8,6 +8,7 @@
   --shadow: 0 8px 24px rgba(36, 20, 24, 0.09);
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body { margin: 0; font-family: Inter, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
 .container { width: min(1080px, 92vw); margin: 0 auto; }
 .hidden { display: none !important; }
@@ -25,6 +26,10 @@ body { margin: 0; font-family: Inter, "Segoe UI", sans-serif; background: var(--
 .section-title { margin: 0 0 .65rem; }
 .section-title-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .75rem; }
 .section-title-row h2 { margin: 0; }
+
+
+.catalog-jump-link { display: inline-block; margin-bottom: .55rem; color: #6b7280; font-size: .88rem; text-decoration: none; border-bottom: 1px dashed #c7cbd1; }
+.catalog-jump-link:hover { color: #374151; border-bottom-color: #9ca3af; }
 
 .filters { display: grid; gap: .75rem; margin-bottom: 1rem; }
 .field { border: 1px solid var(--border); border-radius: 12px; padding: .65rem; background: #fff; }
@@ -47,13 +52,13 @@ textarea { resize: vertical; }
 .helper-title { font-weight: 700; color: #111827; line-height: 1.2; }
 .helper-subtitle { font-size: .84rem; color: var(--muted); line-height: 1.35; }
 
-.trust-section { margin-top: 1.1rem; }
+.trust-section { margin-top: .55rem; padding: .65rem; border-radius: 14px; background: #fffaf8; border: 1px solid #f1e8e6; }
 .steps-grid,
 .guarantees-grid,
 .faq-list { display: grid; gap: .6rem; }
 .info-card,
 .pill-card,
-.faq-item { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: .75rem; }
+.faq-item { background: #fff; border: 1px solid #efe3e1; border-radius: 12px; padding: .7rem; }
 .info-icon { margin: 0 0 .3rem; font-size: 1.05rem; line-height: 1; }
 .info-card h3,
 .pill-card h3 { margin: 0; font-size: .95rem; line-height: 1.3; }
