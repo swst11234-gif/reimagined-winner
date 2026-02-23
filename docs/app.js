@@ -40,7 +40,7 @@ const state = {
   products: [],
   currentProduct: null,
   selectionById: {},
-  filters: { search: "", price: "all", category: "all", occasion: "" },
+  filters: { search: "", price: "all", category: "all", occasion: "", popularSize: null },
   pendingMessage: "",
   wizard: { step: 0, answers: {}, finalMode: false },
   mix: { qty: 21, colors: ["white", "pink"], style: "florist_choice", wrapMode: "nowrap" },
@@ -59,6 +59,8 @@ const el = {
   cardTemplate: document.getElementById("card-template"),
   occasionButtons: document.querySelectorAll("#occasions button"),
   occasionIndicator: document.getElementById("occasion-indicator"),
+  popularSizeButtons: document.querySelectorAll("[data-popular-size]"),
+  popularSizeIndicator: document.getElementById("popular-size-indicator"),
 
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
@@ -233,6 +235,7 @@ function openChannel(kind, text = state.pendingMessage) {
 }
 
 function productQty(product) {
+  if (Number.isFinite(product.qty)) return Number(product.qty);
   const m = product.title.match(/\d+/);
   return m ? Number(m[0]) : 1;
 }
@@ -277,11 +280,12 @@ function filteredProducts() {
     const inSearch = p.title.toLowerCase().includes(state.filters.search.toLowerCase());
     const inCategory = state.filters.category === "all" || p.category === state.filters.category;
     const inOccasion = occasionMatch(p);
+    const inPopularSize = !state.filters.popularSize || productQty(p) === state.filters.popularSize;
     let inPrice = true;
     if (state.filters.price === "2000") inPrice = price <= 2000;
     if (state.filters.price === "4000") inPrice = price <= 4000;
     if (state.filters.price === "4000+") inPrice = price >= 4000;
-    return inSearch && inCategory && inOccasion && inPrice;
+    return inSearch && inCategory && inOccasion && inPopularSize && inPrice;
   });
 }
 
@@ -335,6 +339,27 @@ function renderOccasionIndicator() {
     state.filters.occasion = "";
     el.occasionButtons.forEach((b) => b.classList.remove("is-active"));
     renderOccasionIndicator();
+    renderCatalog();
+  });
+}
+
+function renderPopularSizeIndicator() {
+  el.popularSizeButtons.forEach((button) => {
+    const active = Number(button.dataset.popularSize) === state.filters.popularSize;
+    button.classList.toggle("is-active", active);
+  });
+
+  if (!state.filters.popularSize) {
+    el.popularSizeIndicator.classList.add("hidden");
+    el.popularSizeIndicator.textContent = "";
+    return;
+  }
+
+  el.popularSizeIndicator.classList.remove("hidden");
+  el.popularSizeIndicator.innerHTML = `Показано: <strong>${state.filters.popularSize}</strong> <button id="popular-size-reset" type="button">Сбросить</button>`;
+  el.popularSizeIndicator.querySelector("#popular-size-reset").addEventListener("click", () => {
+    state.filters.popularSize = null;
+    renderPopularSizeIndicator();
     renderCatalog();
   });
 }
@@ -578,6 +603,13 @@ function bindEvents() {
     renderCatalog();
   }));
 
+  el.popularSizeButtons.forEach((button) => button.addEventListener("click", () => {
+    const value = Number(button.dataset.popularSize);
+    state.filters.popularSize = state.filters.popularSize === value ? null : value;
+    renderPopularSizeIndicator();
+    renderCatalog();
+  }));
+
   el.modalClose.addEventListener("click", () => el.modal.close());
   el.modalWrapToggle.querySelectorAll("button[data-wrap]").forEach((b) => b.addEventListener("click", () => {
     if (!state.currentProduct) return;
@@ -652,6 +684,7 @@ async function init() {
       el.categorySelect.appendChild(o);
     });
     renderCatalog();
+    renderPopularSizeIndicator();
     renderMix();
   } catch {
     el.catalogGrid.innerHTML = "<p class='empty-state'>Не удалось загрузить каталог.</p>";
