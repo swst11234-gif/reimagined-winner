@@ -18,7 +18,6 @@
         <div class="contact-box">
           <p class="muted">Связаться</p>
           <div id="contact-links" class="contact-links"></div>
-          <button type="button" id="open-orders" class="my-orders-trigger">Мои заказы <span id="orders-count-badge" class="count-badge hidden">0</span></button>
         </div>
       </div>
     </header>
@@ -63,14 +62,6 @@
         <div class="section-title-row">
           <h2>Каталог</h2>
           <span id="results-count" class="muted"></span>
-        </div>
-
-        <div id="last-order" class="last-order hidden" aria-live="polite">
-          <p id="last-order-text"></p>
-          <div class="last-order-actions">
-            <button type="button" id="last-order-repeat" class="btn btn-secondary">Повторить</button>
-            <button type="button" id="last-order-close" class="last-order-close" aria-label="Скрыть">×</button>
-          </div>
         </div>
 
         <div class="popular-size-row" aria-label="Популярные размеры">
@@ -336,21 +327,6 @@
         <div id="order-confirm-actions" class="wizard-sticky-actions hidden">
           <button type="button" id="order-back" class="btn btn-secondary">Изменить</button>
           <button type="button" id="order-done" class="btn btn-primary">Готово</button>
-        </div>
-      </article>
-    </dialog>
-
-    <dialog id="orders-modal" class="orders-modal">
-      <article>
-        <button type="button" id="orders-close" class="modal-close" aria-label="Закрыть">×</button>
-        <div class="wizard-scroll">
-          <h3>Мои заказы</h3>
-          <p class="muted">Статусы обновляются на вашем устройстве.</p>
-          <div id="orders-list" class="orders-list"></div>
-          <p id="orders-empty" class="empty-state hidden">Заказов пока нет.</p>
-        </div>
-        <div class="wizard-sticky-actions">
-          <button type="button" id="orders-clear" class="btn btn-secondary">Очистить историю</button>
         </div>
       </article>
     </dialog>

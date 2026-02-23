@@ -1,7 +1,5 @@
 const WRAP_ADDON = 200;
 const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
-const LAST_ORDER_KEY = "tlp_last_order";
-const ORDERS_KEY = "tlp_orders";
 
 const CONFIG = {
   shopName: "Тюльпаны",
@@ -48,9 +46,6 @@ const state = {
   mix: { qty: 21, colors: ["white", "pink"], style: "florist_choice", wrapMode: "nowrap" },
   orderDraft: null,
   orderStep: "summary",
-  lastOrder: null,
-  hideLastOrderUntilReload: false,
-  orders: [],
 };
 
 const el = {
@@ -68,17 +63,6 @@ const el = {
   occasionIndicator: document.getElementById("occasion-indicator"),
   popularSizeButtons: document.querySelectorAll("[data-popular-size]"),
   popularSizeIndicator: document.getElementById("popular-size-indicator"),
-  lastOrder: document.getElementById("last-order"),
-  lastOrderText: document.getElementById("last-order-text"),
-  lastOrderRepeat: document.getElementById("last-order-repeat"),
-  lastOrderClose: document.getElementById("last-order-close"),
-  openOrders: document.getElementById("open-orders"),
-  ordersCountBadge: document.getElementById("orders-count-badge"),
-  ordersModal: document.getElementById("orders-modal"),
-  ordersClose: document.getElementById("orders-close"),
-  ordersList: document.getElementById("orders-list"),
-  ordersEmpty: document.getElementById("orders-empty"),
-  ordersClear: document.getElementById("orders-clear"),
 
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
@@ -260,132 +244,6 @@ function openMessengerChoice(title, desc, message) {
   el.messengerModal.showModal();
 }
 
-const ORDER_STATUS = {
-  sent: "Отправлено",
-  confirmed: "Подтверждено",
-  preparing: "Собирается",
-  ready: "Готово",
-  completed: "Выдано",
-  canceled: "Отменено",
-};
-
-function generateOrderId() {
-  return `TLP-${Math.floor(1000 + Math.random() * 9000)}`;
-}
-
-function generateUniqueOrderId() {
-  let id = generateOrderId();
-  const known = new Set(state.orders.map((o) => o.id));
-  while (known.has(id)) id = generateOrderId();
-  return id;
-}
-
-function normalizeOrderRecord(raw) {
-  if (!raw || typeof raw !== "object") return null;
-  if (!raw.id || !raw.productId || !Number.isFinite(raw.qty) || !raw.color || !raw.wrapMode || !Number.isFinite(raw.price)) return null;
-  const status = raw.status && ORDER_STATUS[raw.status] ? raw.status : "sent";
-  return {
-    id: raw.id,
-    productId: raw.productId,
-    createdAt: raw.createdAt || new Date().toISOString(),
-    qty: Number(raw.qty),
-    color: raw.color,
-    wrapMode: raw.wrapMode,
-    price: Number(raw.price),
-    date: raw.date || "",
-    comment: raw.comment || "",
-    status,
-  };
-}
-
-function loadOrders() {
-  try {
-    const raw = localStorage.getItem(ORDERS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    const unique = new Map();
-    parsed.forEach((item) => {
-      const normalized = normalizeOrderRecord(item);
-      if (!normalized) return;
-      if (unique.has(normalized.id)) return;
-      unique.set(normalized.id, normalized);
-    });
-    return [...unique.values()].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  } catch {
-    return [];
-  }
-}
-
-function saveOrders() {
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(state.orders));
-}
-
-function activeOrdersCount() {
-  return state.orders.filter((o) => !["completed", "canceled"].includes(o.status)).length;
-}
-
-function renderOrdersBadge() {
-  const count = activeOrdersCount();
-  if (!count) {
-    el.ordersCountBadge.classList.add("hidden");
-    return;
-  }
-  el.ordersCountBadge.textContent = String(count);
-  el.ordersCountBadge.classList.remove("hidden");
-}
-
-function upsertOrder(order) {
-  const normalized = normalizeOrderRecord(order);
-  if (!normalized) return;
-  const idx = state.orders.findIndex((x) => x.id === normalized.id);
-  if (idx >= 0) state.orders[idx] = normalized;
-  else state.orders.unshift(normalized);
-  state.orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  saveOrders();
-  renderOrdersBadge();
-  renderOrdersModal();
-}
-
-function formatOrderShort(order) {
-  return `${order.qty}, ${getColorMeta(order.color).name.toLowerCase()}, ${order.wrapMode === "wrap" ? "крафт" : "без"}`;
-}
-
-function formatDateTime(value) {
-  if (!value) return "";
-  return new Date(value).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
-}
-
-function renderOrdersModal() {
-  el.ordersList.innerHTML = "";
-  if (!state.orders.length) {
-    el.ordersEmpty.classList.remove("hidden");
-    return;
-  }
-  el.ordersEmpty.classList.add("hidden");
-  state.orders.forEach((order) => {
-    const card = document.createElement("article");
-    card.className = "order-item";
-    card.innerHTML = `
-      <div class="order-item-head">
-        <p class="order-item-id">${order.id}</p>
-        <span class="order-status status-${order.status}">${ORDER_STATUS[order.status]}</span>
-      </div>
-      <p class="order-item-date">${formatDateTime(order.createdAt)}</p>
-      <p class="order-item-short">${formatOrderShort(order)}</p>
-      <p class="order-item-price">${formatPrice(order.price)}</p>
-      <div class="order-item-actions">
-        <button type="button" class="btn btn-secondary" data-copy-order="${order.id}">Скопировать заказ</button>
-        <select data-order-status="${order.id}" class="order-status-select">
-          ${Object.entries(ORDER_STATUS).map(([k, v]) => `<option value="${k}" ${k === order.status ? "selected" : ""}>${v}</option>`).join("")}
-        </select>
-        <button type="button" class="btn btn-primary" data-contact-order="${order.id}">Связаться</button>
-      </div>
-    `;
-    el.ordersList.appendChild(card);
-  });
-}
-
 function formatOrderDate(value) {
   if (!value) return "без";
   try {
@@ -408,50 +266,6 @@ function buildOrderMessage(order) {
     `Дата: ${formatOrderDate(order.date)}`,
     `Комментарий: ${order.comment || "без"}`,
   ].concat(["Спасибо!"]).join("\n");
-}
-
-function saveLastOrder(order) {
-  const payload = {
-    id: order.id,
-    productId: order.productId,
-    qty: order.qty,
-    color: order.color,
-    wrapMode: order.wrapMode,
-    price: order.price,
-    date: order.date || "",
-    comment: order.comment || "",
-    status: order.status || "sent",
-  };
-  localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(payload));
-  state.lastOrder = payload;
-}
-
-function loadLastOrder() {
-  try {
-    const raw = localStorage.getItem(LAST_ORDER_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed || !parsed.productId || !Number.isFinite(parsed.qty) || !parsed.color || !parsed.wrapMode || !Number.isFinite(parsed.price)) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-function renderLastOrderBanner() {
-  if (state.hideLastOrderUntilReload || !state.lastOrder) {
-    el.lastOrder.classList.add("hidden");
-    return;
-  }
-  const product = state.products.find((p) => p.id === state.lastOrder.productId);
-  if (!product) {
-    localStorage.removeItem(LAST_ORDER_KEY);
-    state.lastOrder = null;
-    el.lastOrder.classList.add("hidden");
-    return;
-  }
-  el.lastOrderText.textContent = `Последний заказ: ${state.lastOrder.qty} тюльпан${state.lastOrder.qty === 1 ? "" : "ов"} — ${getColorMeta(state.lastOrder.color).name.toLowerCase()}`;
-  el.lastOrder.classList.remove("hidden");
 }
 
 function renderOrderSummary() {
@@ -954,12 +768,8 @@ function bindEvents() {
     state.orderDraft.date = el.orderDate.value;
     state.orderDraft.comment = el.orderComment.value.trim();
     state.orderDraft.createdAt = state.orderDraft.createdAt || new Date().toISOString();
-    state.orderDraft.id = state.orderDraft.id || generateUniqueOrderId();
-    state.orderDraft.status = state.orderDraft.status || "sent";
+    state.orderDraft.id = state.orderDraft.id || `TLP-${Math.floor(1000 + Math.random() * 9000)}`;
     el.orderId.textContent = state.orderDraft.id;
-    saveLastOrder(state.orderDraft);
-    upsertOrder(state.orderDraft);
-    renderLastOrderBanner();
     setOrderStep("confirm");
   };
   el.orderContinue.addEventListener("click", continueOrder);
@@ -972,61 +782,6 @@ function bindEvents() {
   el.orderTelegram.addEventListener("click", () => sendOrder("telegram"));
   el.orderWhatsapp.addEventListener("click", () => sendOrder("whatsapp"));
   el.orderCall.addEventListener("click", () => sendOrder("call"));
-
-  el.lastOrderRepeat.addEventListener("click", () => {
-    if (!state.lastOrder) return;
-    const product = state.products.find((p) => p.id === state.lastOrder.productId);
-    if (!product) return;
-    getSelection(product.id).color = state.lastOrder.color;
-    getSelection(product.id).wrapMode = state.lastOrder.wrapMode;
-    openOrderSummary(product, getSelection(product.id), state.lastOrder);
-  });
-  el.lastOrderClose.addEventListener("click", () => {
-    state.hideLastOrderUntilReload = true;
-    renderLastOrderBanner();
-  });
-
-  el.openOrders.addEventListener("click", () => {
-    renderOrdersModal();
-    el.ordersModal.showModal();
-  });
-  el.ordersClose.addEventListener("click", () => el.ordersModal.close());
-  closeByOverlay(el.ordersModal);
-  el.ordersClear.addEventListener("click", () => {
-    if (!confirm("Удалить историю заказов на этом устройстве?")) return;
-    state.orders = [];
-    localStorage.removeItem(ORDERS_KEY);
-    renderOrdersModal();
-    renderOrdersBadge();
-  });
-
-  el.ordersList.addEventListener("change", (e) => {
-    const sel = e.target.closest("[data-order-status]");
-    if (!sel) return;
-    const order = state.orders.find((o) => o.id === sel.dataset.orderStatus);
-    if (!order) return;
-    order.status = ORDER_STATUS[sel.value] ? sel.value : order.status;
-    upsertOrder(order);
-  });
-
-  el.ordersList.addEventListener("click", async (e) => {
-    const copyBtn = e.target.closest("[data-copy-order]");
-    if (copyBtn) {
-      const order = state.orders.find((o) => o.id === copyBtn.dataset.copyOrder);
-      if (!order) return;
-      await copyText(buildOrderMessage(order));
-      return;
-    }
-
-    const contactBtn = e.target.closest("[data-contact-order]");
-    if (contactBtn) {
-      const order = state.orders.find((o) => o.id === contactBtn.dataset.contactOrder);
-      if (!order) return;
-      const text = buildOrderMessage(order);
-      await copyText(text);
-      openMessengerChoice("Связаться", "Текст заказа уже скопирован", text);
-    }
-  });
 
   el.messengerTelegram.addEventListener("click", () => openChannel("telegram"));
   el.messengerWhatsapp.addEventListener("click", () => openChannel("whatsapp"));
@@ -1041,8 +796,6 @@ async function init() {
   bindEvents();
   try {
     renderSkeletonCards(6);
-    state.lastOrder = loadLastOrder();
-    state.orders = loadOrders();
     const res = await fetch("data/products.json", { cache: "no-store" });
     state.products = await res.json();
     state.products.forEach((p) => getSelection(p.id));
@@ -1054,9 +807,6 @@ async function init() {
     });
     renderCatalog();
     renderPopularSizeIndicator();
-    renderLastOrderBanner();
-    renderOrdersBadge();
-    renderOrdersModal();
     renderMix();
   } catch {
     el.catalogGrid.innerHTML = "<p class='empty-state'>Не удалось загрузить каталог.</p>";
