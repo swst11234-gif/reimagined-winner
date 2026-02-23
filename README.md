@@ -183,20 +183,15 @@ python3 -m http.server 8000
 И откройте `http://localhost:8000/docs/`.
 
 
-## Ограничение репозитория: бинарные файлы не поддерживаются
 
-В этом окружении репозиторий должен содержать только текстовые файлы.
-Для служебных изображений используйте SVG (например `docs/images/og.svg`, `docs/images/favicon.svg`).
+## Как обновить галерею работ
 
-Проверка перед коммитом:
+1. Положите фотографии в `docs/images/gallery/`.
+2. Откройте `docs/app.js` и обновите массив `GALLERY` (поля `src`, `alt`, `caption`).
+3. Для каждого `src` указывайте путь относительно `docs/`, например: `images/gallery/my-work-1.jpg`.
 
-```bash
-python3 scripts/check_no_binary.py
-python3 scripts/check_no_binary.py --history
+Пример элемента:
+
+```js
+{ src: "images/gallery/my-work-1.jpg", alt: "Букет 31 тюльпан, микс, крафт", caption: "31 • микс • крафт" }
 ```
-
-Скрипт валидирует все tracked-файлы, а с флагом `--history` проверяет все объекты в истории Git и завершится с ошибкой, если найдёт бинарный контент
-или запрещённые расширения.
-
-Также в репозитории добавлен GitHub Actions workflow `.github/workflows/no-binary-files.yml`,
-который автоматически запускает эту проверку на `push` и `pull_request`.
