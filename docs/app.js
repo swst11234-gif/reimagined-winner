@@ -63,6 +63,7 @@ const el = {
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
   openContact: document.getElementById("open-contact"),
+  faqItems: document.querySelectorAll("#faq .faq-item"),
 
   modal: document.getElementById("product-modal"),
   modalClose: document.getElementById("modal-close"),
@@ -115,7 +116,6 @@ const el = {
   messengerTelegram: document.getElementById("messenger-telegram"),
   messengerWhatsapp: document.getElementById("messenger-whatsapp"),
   messengerCall: document.getElementById("messenger-call"),
-
 
   toast: document.getElementById("toast"),
 };
@@ -508,6 +508,27 @@ function mixText() {
   ].join("\n");
 }
 
+function bindFaqAccordion() {
+  if (!el.faqItems.length) return;
+
+  const setOpen = (target) => {
+    el.faqItems.forEach((item) => {
+      const question = item.querySelector(".faq-question");
+      const active = item === target;
+      item.classList.toggle("is-open", active);
+      question?.setAttribute("aria-expanded", String(active));
+    });
+  };
+
+  el.faqItems.forEach((item) => {
+    const question = item.querySelector(".faq-question");
+    question?.addEventListener("click", () => setOpen(item));
+  });
+
+  const initiallyOpen = [...el.faqItems].find((item) => item.classList.contains("is-open"));
+  if (initiallyOpen) setOpen(initiallyOpen);
+}
+
 function bindEvents() {
   el.searchInput.addEventListener("input", (e) => {
     state.filters.search = e.target.value.trim();
@@ -591,6 +612,7 @@ function bindEvents() {
 
 async function init() {
   renderHeader();
+  bindFaqAccordion();
   bindEvents();
   try {
     const res = await fetch("data/products.json", { cache: "no-store" });

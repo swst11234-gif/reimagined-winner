@@ -47,6 +47,27 @@ textarea { resize: vertical; }
 .helper-title { font-weight: 700; color: #111827; line-height: 1.2; }
 .helper-subtitle { font-size: .84rem; color: var(--muted); line-height: 1.35; }
 
+.trust-section { margin-top: 1.1rem; }
+.steps-grid,
+.guarantees-grid,
+.faq-list { display: grid; gap: .6rem; }
+.info-card,
+.pill-card,
+.faq-item { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: .75rem; }
+.info-icon { margin: 0 0 .3rem; font-size: 1.05rem; line-height: 1; }
+.info-card h3,
+.pill-card h3 { margin: 0; font-size: .95rem; line-height: 1.3; }
+.info-card > p:not(.info-icon),
+.pill-card > p:not(.info-icon) { margin: .3rem 0 0; color: var(--muted); line-height: 1.4; }
+.faq-item { overflow: hidden; transition: border-color .2s ease, box-shadow .2s ease; }
+.faq-item.is-open { border-color: #d8c8c8; box-shadow: 0 6px 16px rgba(36,20,24,.06); }
+.faq-question { width: 100%; border: 0; background: transparent; text-align: left; padding: 0; font: inherit; font-weight: 700; color: #111827; display: flex; align-items: center; justify-content: space-between; gap: .7rem; cursor: pointer; }
+.faq-question span { transition: transform .2s ease; font-weight: 500; color: #6b7280; }
+.faq-item.is-open .faq-question span { transform: rotate(45deg); }
+.faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s ease; }
+.faq-item.is-open .faq-answer { grid-template-rows: 1fr; }
+.faq-answer p { overflow: hidden; margin: 0; padding-top: .45rem; color: var(--muted); line-height: 1.45; }
+
 .occasion-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .45rem; }
 .occasion-grid button { border: 1px solid var(--border); background: #fff; border-radius: 12px; padding: .6rem .55rem; text-align: left; font: inherit; font-weight: 600; }
 .occasion-grid button.is-active { border-color: #111827; box-shadow: 0 0 0 2px rgba(17,24,39,.08); }
@@ -142,6 +163,8 @@ textarea { resize: vertical; }
 @media (min-width: 760px) {
   .filters { grid-template-columns: 2fr 2fr 1.2fr; align-items: end; }
   .helper-options { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .steps-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .guarantees-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
   .occasion-grid { grid-template-columns: repeat(5, minmax(0,1fr)); }
   .product-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
   .order-actions { grid-template-columns: 1fr 1fr; }
