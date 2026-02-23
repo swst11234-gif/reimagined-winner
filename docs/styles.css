@@ -30,12 +30,12 @@ body { margin: 0; font-family: Inter, "Segoe UI", sans-serif; background: var(--
 .catalog-jump-link { display: inline-block; margin-bottom: .55rem; color: #6b7280; font-size: .88rem; text-decoration: none; border-bottom: 1px dashed #c7cbd1; }
 .catalog-jump-link:hover { color: #374151; border-bottom-color: #9ca3af; }
 
-.popular-size-row { display: flex; align-items: center; gap: .55rem; margin-bottom: .8rem; flex-wrap: wrap; }
-.popular-size-label { margin: 0; font-size: .84rem; color: var(--muted); }
-.popular-size-chips { display: flex; align-items: center; gap: .4rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.popular-size-row { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: .55rem; row-gap: .35rem; margin-bottom: .8rem; }
+.popular-size-label { margin: 0; font-size: .84rem; color: var(--muted); white-space: nowrap; }
+.popular-size-chips { display: flex; align-items: center; gap: .4rem; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
 .popular-size-chips .chip { padding: .46rem .75rem; border-radius: 999px; min-height: 36px; font-weight: 600; }
 .popular-size-chips .chip.is-active { background: #171717; color: #fff; border-color: #171717; }
-.popular-size-indicator { width: 100%; font-size: .82rem; margin-top: .15rem; }
+.popular-size-indicator { grid-column: 1 / -1; width: 100%; font-size: .82rem; margin-top: .1rem; }
 .popular-size-indicator button { border: 0; background: transparent; color: #6b7280; text-decoration: underline; font: inherit; padding: 0; margin-left: .3rem; }
 
 .filters { display: grid; gap: .75rem; margin-bottom: 1rem; }
@@ -189,8 +189,8 @@ textarea { resize: vertical; }
 
 @media (min-width: 760px) {
   .filters { grid-template-columns: 2fr 2fr 1.2fr; align-items: end; }
-  .popular-size-row { flex-wrap: nowrap; }
-  .popular-size-indicator { width: auto; margin-left: .4rem; margin-top: 0; }
+  .popular-size-row { grid-template-columns: auto auto 1fr; }
+  .popular-size-indicator { grid-column: auto; width: auto; margin-left: .4rem; margin-top: 0; }
   .helper-options { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .steps-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .guarantees-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }

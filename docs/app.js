@@ -347,6 +347,7 @@ function renderPopularSizeIndicator() {
   el.popularSizeButtons.forEach((button) => {
     const active = Number(button.dataset.popularSize) === state.filters.popularSize;
     button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
   });
 
   if (!state.filters.popularSize) {
