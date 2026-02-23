@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Каталог тюльпанов и конструктор микс-букета с быстрым заказом через WhatsApp, Telegram или звонок." />
+    <title>Тюльпаны • Астрахань</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div>
+          <p class="eyebrow">Магазин тюльпанов</p>
+          <h1 id="shop-title">Тюльпаны • Астрахань</h1>
+          <p id="shop-meta" class="muted">+7 937 820 0672</p>
+        </div>
+        <div class="contact-box">
+          <p class="muted">Связаться</p>
+          <div id="contact-links" class="contact-links"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="section">
+        <h2 class="section-title">Повод подарить цветы</h2>
+        <div id="occasions" class="occasion-grid">
+          <button type="button" data-occasion="birthday">🎂 День рождения</button>
+          <button type="button" data-occasion="date">💞 Свидание</button>
+          <button type="button" data-occasion="mom">💐 Маме</button>
+          <button type="button" data-occasion="march8">🌷 8 марта</button>
+          <button type="button" data-occasion="just">✨ Просто так</button>
+        </div>
+        <p id="occasion-indicator" class="muted hidden"></p>
+      </section>
+
+      <section class="section helper-panel">
+        <h3>Поможем выбрать букет</h3>
+        <p>Быстро соберите микс или пройдите мини-опрос — флорист подберёт лучший вариант.</p>
+        <div class="helper-options">
+          <button type="button" id="open-mix" class="helper-tile" aria-label="Собрать микс">
+            <span class="helper-emoji" aria-hidden="true">🎨</span>
+            <span class="helper-title">Собрать микс</span>
+            <span class="helper-subtitle">Выберите количество и цвета (10 секунд)</span>
+          </button>
+          <button type="button" id="open-wizard" class="helper-tile" aria-label="Подобрать букет">
+            <span class="helper-emoji" aria-hidden="true">📝</span>
+            <span class="helper-title">Подобрать букет</span>
+            <span class="helper-subtitle">Мини-опрос по поводу и бюджету (30 секунд)</span>
+          </button>
+          <button type="button" id="open-contact" class="helper-tile" aria-label="Связаться">
+            <span class="helper-emoji" aria-hidden="true">💬</span>
+            <span class="helper-title">Связаться</span>
+            <span class="helper-subtitle">Написать/позвонить флористу</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <a href="#how-we-work" class="catalog-jump-link">Как мы работаем ↓</a>
+        <div class="section-title-row">
+          <h2>Каталог</h2>
+          <span id="results-count" class="muted"></span>
+        </div>
+
+        <div class="popular-size-row" aria-label="Популярные размеры">
+          <p class="popular-size-label">Чаще берут:</p>
+          <div id="popular-size-chips" class="popular-size-chips">
+            <button type="button" class="chip" data-popular-size="21" aria-pressed="false">21</button>
+            <button type="button" class="chip" data-popular-size="31" aria-pressed="false">31</button>
+          </div>
+          <p id="popular-size-indicator" class="muted popular-size-indicator hidden"></p>
+        </div>
+
+        <form id="filters" class="filters" autocomplete="off">
+          <label class="field">
+            <span>Поиск</span>
+            <input type="search" id="search" placeholder="Например, 31 тюльпан" />
+          </label>
+
+          <fieldset class="field">
+            <legend>Цена</legend>
+            <div class="price-buttons">
+              <button type="button" class="chip is-active" data-price="all">Все</button>
+              <button type="button" class="chip" data-price="2000">До 2000</button>
+              <button type="button" class="chip" data-price="4000">До 4000</button>
+              <button type="button" class="chip" data-price="4000+">4000+</button>
+            </div>
+          </fieldset>
+
+          <label class="field">
+            <span>Тип</span>
+            <select id="category">
+              <option value="all">Все</option>
+            </select>
+          </label>
+        </form>
+
+        <div id="catalog-grid" class="product-grid"></div>
+        <p id="empty-state" class="empty-state hidden">Ничего не найдено. Попробуйте изменить фильтры.</p>
+      </section>
+
+      <section id="how-we-work" class="section trust-section">
+        <h2 class="section-title">Как мы работаем</h2>
+        <div class="steps-grid">
+          <article class="info-card">
+            <p class="info-icon" aria-hidden="true">🛍️</p>
+            <h3>1. Выбираете букет или собираете микс</h3>
+            <p>Каталог, быстрый микс или помощь флориста.</p>
+          </article>
+          <article class="info-card">
+            <p class="info-icon" aria-hidden="true">✅</p>
+            <h3>2. Подтверждаем детали</h3>
+            <p>Покажем фото, согласуем цвета и упаковку.</p>
+          </article>
+          <article class="info-card">
+            <p class="info-icon" aria-hidden="true">🚚</p>
+            <h3>3. Забираете или доставка</h3>
+            <p>Свежие цветы в удобное время.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="guarantees" class="section trust-section">
+        <h2 class="section-title">Почему можно доверять</h2>
+        <div class="guarantees-grid">
+          <article class="pill-card">
+            <p class="info-icon" aria-hidden="true">🌷</p>
+            <h3>Свежий срез</h3>
+            <p>Цветы собираем перед выдачей.</p>
+          </article>
+          <article class="pill-card trust-photo-card">
+            <p class="info-icon" aria-hidden="true">📸</p>
+            <h3>Фото перед выдачей</h3>
+            <p>Покажем букет перед выдачей.</p>
+          </article>
+          <article class="pill-card">
+            <p class="info-icon" aria-hidden="true">🎯</p>
+            <h3>Можно изменить</h3>
+            <p>Скорректируем цвета и детали.</p>
+          </article>
+          <article class="pill-card">
+            <p class="info-icon" aria-hidden="true">⚡</p>
+            <h3>Без сложностей</h3>
+            <p>Быстрое общение без форм и регистрации.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="faq-section" class="section trust-section">
+        <h2 class="section-title">Частые вопросы</h2>
+        <div id="faq" class="faq-list">
+          <article class="faq-item is-open">
+            <button type="button" class="faq-question" aria-expanded="true">Как быстро собирается букет?<span aria-hidden="true">+</span></button>
+            <div class="faq-answer"><p>Обычно 20–60 минут.</p></div>
+          </article>
+          <article class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">Можно ли микс?<span aria-hidden="true">+</span></button>
+            <div class="faq-answer"><p>Да, можно выбрать цвета или доверить флористу.</p></div>
+          </article>
+          <article class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">Можно ли изменить заказ?<span aria-hidden="true">+</span></button>
+            <div class="faq-answer"><p>Да, пока букет не собран.</p></div>
+          </article>
+          <article class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">Есть ли доставка?<span aria-hidden="true">+</span></button>
+            <div class="faq-answer"><p>Обсуждаем индивидуально.</p></div>
+          </article>
+          <article class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">Как оплатить?<span aria-hidden="true">+</span></button>
+            <div class="faq-answer"><p>После согласования удобным способом.</p></div>
+          </article>
+        </div>
+      </section>
+
+    </main>
+
+    <dialog id="product-modal" class="product-modal">
+      <article>
+        <button type="button" id="modal-close" class="modal-close" aria-label="Закрыть">×</button>
+        <div class="modal-media-wrap"><img id="modal-image" class="modal-image img-fade" src="" alt="" /></div>
+        <p id="modal-missing-hint" class="image-hint hidden">Фото временно отсутствует</p>
+        <div class="modal-content">
+          <p id="modal-category" class="eyebrow"></p>
+          <h3 id="modal-title"></h3>
+          <p id="modal-price" class="modal-price"></p>
+          <p id="modal-description"></p>
+
+          <div class="picker-row">
+            <p class="picker-label">Цвет тюльпанов: <strong id="modal-color-name"></strong></p>
+            <div id="modal-swatches" class="swatches"></div>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Упаковка</p>
+            <div id="modal-wrap-toggle" class="segment" role="group" aria-label="Выбор упаковки">
+              <button type="button" data-wrap="wrap" aria-pressed="false">С крафтовой бумагой</button>
+              <button type="button" data-wrap="nowrap" aria-pressed="true">Без бумаги</button>
+            </div>
+          </div>
+
+          <div class="order-actions sticky-order">
+            <button type="button" id="order-button" class="btn btn-primary">Заказать</button>
+            <button type="button" id="copy-button" class="btn btn-secondary">Скопировать текст заказа</button>
+          </div>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="wizard-modal" class="wizard-modal">
+      <article>
+        <button type="button" id="wizard-close" class="modal-close" aria-label="Закрыть">×</button>
+        <div class="wizard-scroll">
+          <h3>Пройдите короткий опрос — мы соберём букет специально для вас.</h3>
+          <p id="wizard-progress" class="muted"></p>
+          <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
+          <p id="wizard-question" class="wizard-question"></p>
+
+          <label class="wizard-field" id="wizard-input-wrap">
+            <input type="text" id="wizard-input" placeholder="Введите ответ" />
+            <textarea id="wizard-textarea" class="hidden" rows="3" placeholder="Введите ответ"></textarea>
+            <select id="wizard-select" class="hidden"></select>
+          </label>
+
+          <div id="wizard-final" class="wizard-final hidden">
+            <p class="picker-label">Текст заявки:</p>
+            <textarea id="wizard-preview" rows="8" readonly></textarea>
+            <p id="wizard-hint" class="muted wizard-hint"></p>
+          </div>
+        </div>
+
+        <div id="wizard-step-actions" class="wizard-actions wizard-sticky-actions">
+          <button type="button" id="wizard-skip" class="btn btn-secondary">Пропустить</button>
+          <button type="button" id="wizard-next" class="btn btn-primary">Далее</button>
+        </div>
+
+        <div id="wizard-final-actions" class="wizard-sticky-actions hidden">
+          <button type="button" id="wizard-copy" class="btn btn-secondary">Скопировать текст</button>
+          <button type="button" id="wizard-contact" class="btn btn-primary">Связаться</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="mix-modal" class="wizard-modal">
+      <article>
+        <button type="button" id="mix-close" class="modal-close" aria-label="Закрыть">×</button>
+        <div class="wizard-scroll">
+          <h3>Конструктор микс-букета</h3>
+          <p class="muted">Соберём красивый микс в выбранной гамме. Точный вид может немного отличаться.</p>
+
+          <div class="picker-row">
+            <p class="picker-label">Количество</p>
+            <div id="mix-qty" class="qty-grid"></div>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Цвета (1–4)</p>
+            <div id="mix-colors" class="swatches"></div>
+            <p id="mix-colors-text" class="muted"></p>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Стиль</p>
+            <div id="mix-styles" class="style-grid"></div>
+          </div>
+
+          <div class="picker-row">
+            <p class="picker-label">Упаковка</p>
+            <div id="mix-wrap" class="segment" role="group">
+              <button type="button" data-wrap="wrap" aria-pressed="false">С крафтовой бумагой</button>
+              <button type="button" data-wrap="nowrap" aria-pressed="true">Без бумаги</button>
+            </div>
+          </div>
+
+          <div class="mix-example">
+            <img id="mix-example-img" src="" alt="Пример микс-букета" />
+            <p class="muted">Пример. Соберём микс в выбранных цветах — точный вид может немного отличаться.</p>
+          </div>
+
+          <div id="mix-summary" class="mix-summary"></div>
+        </div>
+
+        <div class="wizard-sticky-actions">
+          <button type="button" id="mix-order" class="btn btn-primary">Заказать микс</button>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog id="messenger-modal" class="messenger-modal">
+      <article>
+        <h3 id="messenger-title">Связаться</h3>
+        <p id="messenger-description" class="muted"></p>
+        <div class="messenger-actions">
+          <button type="button" id="messenger-telegram" class="btn btn-secondary">Telegram</button>
+          <button type="button" id="messenger-whatsapp" class="btn btn-primary">WhatsApp</button>
+          <button type="button" id="messenger-call" class="btn btn-secondary">Позвонить</button>
+        </div>
+        <button type="button" id="messenger-close" class="link-close">Закрыть</button>
+      </article>
+    </dialog>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card-media-wrap">
+          <span class="card-size-badge"></span>
+          <div class="card-mini-badges"></div>
+          <img class="card-media img-fade" src="" alt="" loading="lazy" />
+        </div>
+        <p class="image-hint hidden">Фото временно отсутствует</p>
+        <div class="card-body">
+          <h3 class="card-title"></h3>
+          <p class="card-price"></p>
+          <p class="card-meta"></p>
+          <button type="button" class="btn btn-primary card-order">Заказать</button>
+          <p class="card-trust"><span aria-hidden="true">📷</span> Покажем букет перед выдачей</p>
+        </div>
+      </article>
+    </template>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite">Текст заявки скопирован</div>
+    <script src="app.js" defer></script>
+  </body>
+</html>
