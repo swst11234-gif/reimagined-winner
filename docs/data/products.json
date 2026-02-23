@@ -1,0 +1,319 @@
+[
+  {
+    "id": "single-tulip",
+    "title": "Один тюльпан",
+    "price": 140,
+    "category": "Поштучно",
+    "short": "Свежий тюльпан для знака внимания.",
+    "description": "Аккуратный вариант для небольшого приятного подарка.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/single_wrap.svg",
+        "nowrap": "assets/tulips/white/single_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/single_wrap.svg",
+        "nowrap": "assets/tulips/red/single_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/single_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/single_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/single_wrap.svg",
+        "nowrap": "assets/tulips/pink/single_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/single_wrap.svg",
+        "nowrap": "assets/tulips/yellow/single_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/single_wrap.svg",
+        "nowrap": "assets/tulips/purple/single_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Под заказ"
+    ],
+    "qty": 1
+  },
+  {
+    "id": "bouquet-7",
+    "title": "Букет 7 тюльпанов",
+    "price": 945,
+    "category": "Букеты",
+    "short": "Лаконичный букет в крафтовой бумаге.",
+    "description": "Компактный букет для поздравления без лишнего повода.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут",
+      "Под заказ"
+    ],
+    "qty": 7
+  },
+  {
+    "id": "bouquet-9",
+    "title": "Букет 9 тюльпанов",
+    "price": 1215,
+    "category": "Букеты",
+    "short": "Яркий букет для тёплого поздравления.",
+    "description": "Универсальный вариант для подарка коллеге, подруге или маме.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Часто берут"
+    ],
+    "qty": 9
+  },
+  {
+    "id": "bouquet-13",
+    "title": "Букет 13 тюльпанов",
+    "price": 1755,
+    "category": "Букеты",
+    "short": "Объёмный букет в аккуратной подаче.",
+    "description": "Сбалансированный размер для важной встречи или праздника.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Под заказ"
+    ],
+    "qty": 13
+  },
+  {
+    "id": "bouquet-21",
+    "title": "Букет 21 тюльпан",
+    "price": 2835,
+    "category": "Букеты",
+    "short": "Праздничный букет с заметным объёмом.",
+    "description": "Выразительный подарок для значимого события.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут"
+    ],
+    "qty": 21
+  },
+  {
+    "id": "bouquet-31",
+    "title": "Букет 31 тюльпан",
+    "price": 4185,
+    "category": "Букеты",
+    "short": "Большой букет для особого случая.",
+    "description": "Подчёркнуто торжественный формат с насыщенным визуальным эффектом.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно"
+    ],
+    "qty": 31
+  },
+  {
+    "id": "bouquet-51",
+    "title": "Букет 51 тюльпан",
+    "price": 6120,
+    "category": "Букеты",
+    "short": "Эффектный букет для яркого впечатления.",
+    "description": "Идеально для крупных поздравлений и запоминающихся дат.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Под заказ"
+    ],
+    "qty": 51
+  },
+  {
+    "id": "bouquet-101",
+    "title": "Букет 101 тюльпан",
+    "price": 11615,
+    "category": "Букеты",
+    "short": "Максимально впечатляющий букет.",
+    "description": "Премиальный выбор, когда хочется подарить вау-эффект.",
+    "availability": "preorder",
+    "images": {
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут",
+      "Под заказ"
+    ],
+    "qty": 101
+  }
+]
