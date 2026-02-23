@@ -400,6 +400,7 @@ function makeWizardText() {
   if (a.palette) lines.push(`Цветы/гамма: ${a.palette}`);
   if (a.budget) lines.push(`Бюджет: ${a.budget}`);
   if (a.wishes) lines.push(`Пожелания: ${a.wishes}`);
+  lines.push("Перед передачей отправим фото букета.");
   lines.push("Спасибо!");
   return lines.join("\n");
 }
@@ -510,6 +511,7 @@ function mixText() {
     `Стиль: ${currentMixStyleMeta().label}`,
     `Упаковка: ${state.mix.wrapMode === "wrap" ? "крафт" : "без бумаги"}`,
     `Цена: ${formatPrice(currentMixPrice())}`,
+    "Перед передачей отправим фото букета.",
     "Спасибо!",
   ].join("\n");
 }
