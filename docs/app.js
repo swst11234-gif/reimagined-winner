@@ -61,9 +61,8 @@ const el = {
   occasionIndicator: document.getElementById("occasion-indicator"),
 
   openWizard: document.getElementById("open-wizard"),
-  contactFlorists: document.getElementById("contact-florists"),
   openMix: document.getElementById("open-mix"),
-  contactFloristsMix: document.getElementById("contact-florists-mix"),
+  openContact: document.getElementById("open-contact"),
 
   modal: document.getElementById("product-modal"),
   modalClose: document.getElementById("modal-close"),
@@ -117,10 +116,6 @@ const el = {
   messengerWhatsapp: document.getElementById("messenger-whatsapp"),
   messengerCall: document.getElementById("messenger-call"),
 
-  contactSheet: document.getElementById("contact-sheet"),
-  sheetTelegram: document.getElementById("sheet-telegram"),
-  sheetWhatsapp: document.getElementById("sheet-whatsapp"),
-  sheetCall: document.getElementById("sheet-call"),
 
   toast: document.getElementById("toast"),
 };
@@ -219,17 +214,18 @@ function makeOrderText(product, sel) {
 }
 
 function openMessengerChoice(title, desc, message) {
-  state.pendingMessage = message || "Здравствуйте!";
+  state.pendingMessage = typeof message === "string" ? message : "Здравствуйте!";
   el.messengerTitle.textContent = title;
   el.messengerDescription.textContent = desc || "";
   el.messengerModal.showModal();
 }
 
 function openChannel(kind, text = state.pendingMessage) {
-  const encoded = encodeURIComponent(text || "Здравствуйте!");
+  const hasText = Boolean(text);
+  const encoded = encodeURIComponent(text || "");
   const links = {
-    whatsapp: `https://wa.me/${CONFIG.whatsappNumber}?text=${encoded}`,
-    telegram: `${telegramLink()}?text=${encoded}`,
+    whatsapp: hasText ? `https://wa.me/${CONFIG.whatsappNumber}?text=${encoded}` : `https://wa.me/${CONFIG.whatsappNumber}`,
+    telegram: hasText ? `${telegramLink()}?text=${encoded}` : telegramLink(),
     call: CONFIG.callLink,
   };
   window.open(links[kind], "_blank", "noopener");
@@ -563,26 +559,14 @@ function bindEvents() {
   el.wizardNext.addEventListener("click", () => nextWizard(false));
   el.wizardSkip.addEventListener("click", () => nextWizard(true));
   el.wizardCopy.addEventListener("click", () => copyText(makeWizardText()));
-  el.wizardContact.addEventListener("click", () => el.contactSheet.showModal());
-
-  el.sheetTelegram.addEventListener("click", async () => {
-    await copyText(makeWizardText());
-    showToast("Вставьте текст заявки в чат");
-    openChannel("telegram", makeWizardText());
-  });
-  el.sheetWhatsapp.addEventListener("click", async () => {
-    await copyText(makeWizardText());
-    showToast("Вставьте текст заявки в чат");
-    openChannel("whatsapp", makeWizardText());
-  });
-  el.sheetCall.addEventListener("click", () => {
-    showToast("Можно продиктовать заявку по телефону");
-    openChannel("call", makeWizardText());
+  el.wizardContact.addEventListener("click", async () => {
+    const text = makeWizardText();
+    await copyText(text);
+    openMessengerChoice("Куда написать?", "Текст заявки уже скопирован", text);
   });
 
-  const openFloristContact = () => openMessengerChoice("Связаться", "Выберите удобный канал для связи с флористом.", "Здравствуйте! Нужна консультация по букету.");
-  el.contactFlorists.addEventListener("click", openFloristContact);
-  el.contactFloristsMix.addEventListener("click", openFloristContact);
+  const openFloristContact = () => openMessengerChoice("Связаться", "Выберите удобный канал для связи с флористом.", "");
+  el.openContact.addEventListener("click", openFloristContact);
 
   el.openMix.addEventListener("click", () => {
     renderMix();

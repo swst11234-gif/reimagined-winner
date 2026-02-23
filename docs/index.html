@@ -35,21 +35,25 @@
         <p id="occasion-indicator" class="muted hidden"></p>
       </section>
 
-      <section class="section custom-bouquet-block">
-        <h3>Индивидуальный букет (микс)</h3>
-        <p>Ответьте на 4–5 вопросов — и мы соберём букет под ваш повод, цвет и бюджет.</p>
-        <div class="custom-bouquet-actions">
-          <button type="button" id="open-wizard" class="btn btn-primary">Подобрать букет</button>
-          <button type="button" id="contact-florists" class="btn btn-secondary">Написать флористу</button>
-        </div>
-      </section>
-
-      <section class="section custom-bouquet-block mix-cta">
-        <h3>Собрать микс-букет</h3>
-        <p>Выберите количество и цвета — флорист соберёт красивый микс под ваш бюджет.</p>
-        <div class="custom-bouquet-actions">
-          <button type="button" id="open-mix" class="btn btn-primary">Собрать микс</button>
-          <button type="button" id="contact-florists-mix" class="btn btn-secondary">Написать флористу</button>
+      <section class="section helper-panel">
+        <h3>Поможем выбрать букет</h3>
+        <p>Быстро соберите микс или пройдите мини-опрос — флорист подберёт лучший вариант.</p>
+        <div class="helper-options">
+          <button type="button" id="open-mix" class="helper-tile" aria-label="Собрать микс">
+            <span class="helper-emoji" aria-hidden="true">🎨</span>
+            <span class="helper-title">Собрать микс</span>
+            <span class="helper-subtitle">Выберите количество и цвета (10 секунд)</span>
+          </button>
+          <button type="button" id="open-wizard" class="helper-tile" aria-label="Подобрать букет">
+            <span class="helper-emoji" aria-hidden="true">📝</span>
+            <span class="helper-title">Подобрать букет</span>
+            <span class="helper-subtitle">Мини-опрос по поводу и бюджету (30 секунд)</span>
+          </button>
+          <button type="button" id="open-contact" class="helper-tile" aria-label="Связаться">
+            <span class="helper-emoji" aria-hidden="true">💬</span>
+            <span class="helper-title">Связаться</span>
+            <span class="helper-subtitle">Написать/позвонить флористу</span>
+          </button>
         </div>
       </section>
 
@@ -212,16 +216,6 @@
       </article>
     </dialog>
 
-    <dialog id="contact-sheet" class="contact-sheet">
-      <article>
-        <h3>Связаться</h3>
-        <div class="messenger-actions">
-          <button type="button" id="sheet-telegram" class="btn btn-secondary">Telegram</button>
-          <button type="button" id="sheet-whatsapp" class="btn btn-primary">WhatsApp</button>
-          <button type="button" id="sheet-call" class="btn btn-secondary">Позвонить</button>
-        </div>
-      </article>
-    </dialog>
 
     <template id="card-template">
       <article class="card">
