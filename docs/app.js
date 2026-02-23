@@ -236,6 +236,28 @@ function productQty(product) {
   return m ? Number(m[0]) : 1;
 }
 
+function cardBadges(product) {
+  return Array.isArray(product.badges) && product.badges.length ? product.badges : ["Под заказ"];
+}
+
+function renderSkeletonCards(count = 6) {
+  el.catalogGrid.innerHTML = "";
+  for (let i = 0; i < count; i += 1) {
+    const card = document.createElement("article");
+    card.className = "card skeleton-card";
+    card.innerHTML = `
+      <div class="skeleton-media"></div>
+      <div class="card-body">
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-price"></div>
+        <div class="skeleton-line skeleton-meta"></div>
+        <div class="skeleton-btn"></div>
+      </div>
+    `;
+    el.catalogGrid.appendChild(card);
+  }
+}
+
 function occasionMatch(product) {
   const q = productQty(product);
   switch (state.filters.occasion) {
@@ -267,36 +289,19 @@ function createCard(product) {
   const img = frag.querySelector(".card-media");
   const hint = frag.querySelector(".image-hint");
   const title = frag.querySelector(".card-title");
-  const short = frag.querySelector(".card-short");
   const price = frag.querySelector(".card-price");
-  const swatches = frag.querySelector(".swatches");
-  const colorName = frag.querySelector(".selected-color");
-  const segment = frag.querySelector(".segment");
+  const meta = frag.querySelector(".card-meta");
+  const sizeBadge = frag.querySelector(".card-size-badge");
+  const miniBadges = frag.querySelector(".card-mini-badges");
   const orderBtn = frag.querySelector(".card-order");
 
+  const sel = getSelection(product.id);
   title.textContent = product.title;
-  short.textContent = product.short;
-
-  const rerender = () => {
-    const sel = getSelection(product.id);
-    colorName.textContent = getColorMeta(sel.color).name;
-    price.textContent = formatPrice(getCurrentPrice(product, sel));
-    updateImageWithFade(img, hint, resolveImage(product, sel));
-    renderSwatches(swatches, sel.color, (color) => {
-      getSelection(product.id).color = color;
-      rerender();
-      if (state.currentProduct?.id === product.id) renderProductModal();
-    });
-    applySegmentState(segment, sel.wrapMode);
-  };
-
-  segment.querySelectorAll("button[data-wrap]").forEach((b) => {
-    b.addEventListener("click", () => {
-      getSelection(product.id).wrapMode = b.dataset.wrap;
-      rerender();
-      if (state.currentProduct?.id === product.id) renderProductModal();
-    });
-  });
+  price.textContent = formatPrice(getCurrentPrice(product, sel));
+  meta.textContent = `${product.category} · ${sel.wrapMode === "wrap" ? "Крафт" : "Без упаковки"}`;
+  sizeBadge.textContent = `${productQty(product)} шт`;
+  miniBadges.innerHTML = cardBadges(product).map((tag) => `<span class="mini-badge">${tag}</span>`).join("");
+  updateImageWithFade(img, hint, resolveImage(product, sel));
 
   orderBtn.addEventListener("click", () => {
     state.currentProduct = product;
@@ -304,7 +309,6 @@ function createCard(product) {
     el.modal.showModal();
   });
 
-  rerender();
   return frag;
 }
 
@@ -312,6 +316,8 @@ function renderCatalog() {
   const list = filteredProducts();
   el.catalogGrid.innerHTML = "";
   list.forEach((p) => el.catalogGrid.appendChild(createCard(p)));
+  el.catalogGrid.classList.remove("catalog-ready");
+  requestAnimationFrame(() => el.catalogGrid.classList.add("catalog-ready"));
   el.resultsCount.textContent = `Найдено: ${list.length}`;
   el.emptyState.classList.toggle("hidden", list.length > 0);
 }
@@ -615,6 +621,7 @@ async function init() {
   bindFaqAccordion();
   bindEvents();
   try {
+    renderSkeletonCards(6);
     const res = await fetch("data/products.json", { cache: "no-store" });
     state.products = await res.json();
     state.products.forEach((p) => getSelection(p.id));

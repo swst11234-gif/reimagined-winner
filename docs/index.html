@@ -294,27 +294,16 @@
 
     <template id="card-template">
       <article class="card">
-        <span class="badge">Под заказ</span>
-        <div class="card-media-wrap"><img class="card-media img-fade" src="" alt="" loading="lazy" /></div>
+        <div class="card-media-wrap">
+          <span class="card-size-badge"></span>
+          <div class="card-mini-badges"></div>
+          <img class="card-media img-fade" src="" alt="" loading="lazy" />
+        </div>
         <p class="image-hint hidden">Фото временно отсутствует</p>
         <div class="card-body">
           <h3 class="card-title"></h3>
-          <p class="card-short"></p>
-
-          <div class="picker-row compact">
-            <p class="picker-label">Цвет: <strong class="selected-color"></strong></p>
-            <div class="swatches"></div>
-          </div>
-
-          <div class="picker-row compact">
-            <p class="picker-label">Упаковка</p>
-            <div class="segment" role="group">
-              <button type="button" data-wrap="wrap" aria-pressed="false">С крафтовой бумагой</button>
-              <button type="button" data-wrap="nowrap" aria-pressed="true">Без бумаги</button>
-            </div>
-          </div>
-
           <p class="card-price"></p>
+          <p class="card-meta"></p>
           <button type="button" class="btn btn-primary card-order">Заказать</button>
         </div>
       </article>

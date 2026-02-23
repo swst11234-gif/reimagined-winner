@@ -8,13 +8,35 @@
     "description": "Аккуратный вариант для небольшого приятного подарка.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/single_wrap.svg", "nowrap": "assets/tulips/white/single_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/single_wrap.svg", "nowrap": "assets/tulips/red/single_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/single_wrap.svg", "nowrap": "assets/tulips/pink_center/single_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/single_wrap.svg", "nowrap": "assets/tulips/pink/single_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/single_wrap.svg", "nowrap": "assets/tulips/yellow/single_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/single_wrap.svg", "nowrap": "assets/tulips/purple/single_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/single_wrap.svg",
+        "nowrap": "assets/tulips/white/single_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/single_wrap.svg",
+        "nowrap": "assets/tulips/red/single_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/single_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/single_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/single_wrap.svg",
+        "nowrap": "assets/tulips/pink/single_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/single_wrap.svg",
+        "nowrap": "assets/tulips/yellow/single_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/single_wrap.svg",
+        "nowrap": "assets/tulips/purple/single_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Под заказ"
+    ]
   },
   {
     "id": "bouquet-7",
@@ -25,13 +47,35 @@
     "description": "Компактный букет для поздравления без лишнего повода.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут",
+      "Под заказ"
+    ]
   },
   {
     "id": "bouquet-9",
@@ -42,13 +86,35 @@
     "description": "Универсальный вариант для подарка коллеге, подруге или маме.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Часто берут"
+    ]
   },
   {
     "id": "bouquet-13",
@@ -59,13 +125,34 @@
     "description": "Сбалансированный размер для важной встречи или праздника.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Под заказ"
+    ]
   },
   {
     "id": "bouquet-21",
@@ -76,13 +163,34 @@
     "description": "Выразительный подарок для значимого события.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут"
+    ]
   },
   {
     "id": "bouquet-31",
@@ -93,13 +201,34 @@
     "description": "Подчёркнуто торжественный формат с насыщенным визуальным эффектом.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно"
+    ]
   },
   {
     "id": "bouquet-51",
@@ -110,13 +239,35 @@
     "description": "Идеально для крупных поздравлений и запоминающихся дат.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Популярно",
+      "Под заказ"
+    ]
   },
   {
     "id": "bouquet-101",
@@ -127,12 +278,34 @@
     "description": "Премиальный выбор, когда хочется подарить вау-эффект.",
     "availability": "preorder",
     "images": {
-      "white": { "wrap": "assets/tulips/white/bq_wrap.svg", "nowrap": "assets/tulips/white/bq_nowrap.svg" },
-      "red": { "wrap": "assets/tulips/red/bq_wrap.svg", "nowrap": "assets/tulips/red/bq_nowrap.svg" },
-      "pink_center": { "wrap": "assets/tulips/pink_center/bq_wrap.svg", "nowrap": "assets/tulips/pink_center/bq_nowrap.svg" },
-      "pink": { "wrap": "assets/tulips/pink/bq_wrap.svg", "nowrap": "assets/tulips/pink/bq_nowrap.svg" },
-      "yellow": { "wrap": "assets/tulips/yellow/bq_wrap.svg", "nowrap": "assets/tulips/yellow/bq_nowrap.svg" },
-      "purple": { "wrap": "assets/tulips/purple/bq_wrap.svg", "nowrap": "assets/tulips/purple/bq_nowrap.svg" }
-    }
+      "white": {
+        "wrap": "assets/tulips/white/bq_wrap.svg",
+        "nowrap": "assets/tulips/white/bq_nowrap.svg"
+      },
+      "red": {
+        "wrap": "assets/tulips/red/bq_wrap.svg",
+        "nowrap": "assets/tulips/red/bq_nowrap.svg"
+      },
+      "pink_center": {
+        "wrap": "assets/tulips/pink_center/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink_center/bq_nowrap.svg"
+      },
+      "pink": {
+        "wrap": "assets/tulips/pink/bq_wrap.svg",
+        "nowrap": "assets/tulips/pink/bq_nowrap.svg"
+      },
+      "yellow": {
+        "wrap": "assets/tulips/yellow/bq_wrap.svg",
+        "nowrap": "assets/tulips/yellow/bq_nowrap.svg"
+      },
+      "purple": {
+        "wrap": "assets/tulips/purple/bq_wrap.svg",
+        "nowrap": "assets/tulips/purple/bq_nowrap.svg"
+      }
+    },
+    "badges": [
+      "Часто берут",
+      "Под заказ"
+    ]
   }
 ]
