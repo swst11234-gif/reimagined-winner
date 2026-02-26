@@ -125,16 +125,6 @@
             <input type="search" id="search" placeholder="Например, 31 тюльпан" />
           </label>
 
-          <fieldset class="field">
-            <legend>Цена</legend>
-            <div class="price-buttons">
-              <button type="button" class="chip is-active" data-price="all">Все</button>
-              <button type="button" class="chip" data-price="2000">До 2000</button>
-              <button type="button" class="chip" data-price="4000">До 4000</button>
-              <button type="button" class="chip" data-price="4000+">4000+</button>
-            </div>
-          </fieldset>
-
           <label class="field">
             <span>Тип</span>
             <select id="category">
@@ -346,6 +336,7 @@
 
         <div id="order-summary-step" class="wizard-scroll">
           <h3>Ваш заказ</h3>
+          <p class="order-badge">Параметры</p>
           <div id="order-summary-list" class="order-summary-list"></div>
 
           <label class="compact-field">

@@ -1,12 +1,12 @@
  :root {
   --bg: #080f0c;
-  --bg-soft: radial-gradient(1200px 600px at 10% -10%, rgba(16, 185, 129, .14), transparent 55%), radial-gradient(900px 500px at 90% 0%, rgba(16, 185, 129, .08), transparent 50%), #080f0c;
-  --surface: rgba(17, 24, 22, 0.86);
+  --bg-soft: #0B0C0D;
+  --surface: #111315;
   --surface-strong: #0d1512;
-  --text: #ecf3ef;
-  --muted: #9cb0a8;
-  --primary: #19a56f;
-  --primary-strong: #117a53;
+  --text: #F5F7F8;
+  --muted: #C9D1D9;
+  --primary: #00A862;
+  --primary-strong: #007A4B;
   --border: rgba(167, 243, 208, 0.18);
   --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
 }
@@ -287,3 +287,29 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
 @media (min-width: 760px) {
   .occasion-grid { overflow: visible; flex-wrap: wrap; }
 }
+
+
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.order-summary-modal::backdrop { background: rgba(4,5,6,.84); }
+.order-summary-modal article { background: #111315; border: 1px solid rgba(245,247,248,.18); }
+.order-summary-modal h3 { color: #F5F7F8; }
+.order-badge { display: inline-flex; width: fit-content; margin: 0 0 .7rem; padding: .2rem .55rem; border: 1px solid rgba(0,168,98,.45); border-radius: 999px; color: #c6ffe7; font-size: .76rem; letter-spacing: .02em; }
+.order-summary-list { gap: .25rem; }
+.order-row { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; padding: .42rem 0; color: #C9D1D9; }
+.order-row span { color: #9AA4AE; }
+.order-row strong { color: #F5F7F8; font-weight: 700; text-transform: capitalize; }
+.order-row-total strong { color: #F5F7F8; font-size: 1.08rem; }
+.order-divider { border: 0; border-top: 1px solid rgba(245,247,248,.14); margin: .35rem 0 .2rem; }
+.compact-field span { color: #9AA4AE; }
+.compact-field input, .compact-field textarea { min-height: 46px; border-color: rgba(245,247,248,.2); background: #0B0C0D; }
+.wizard-sticky-actions { background: linear-gradient(to top, #111315 68%, rgba(17,19,21,.92)); border-top: 1px solid rgba(245,247,248,.12); }
+.btn-primary { color: #07110c; font-weight: 700; }
+.btn-primary:hover { background: linear-gradient(180deg, #00A862, #007A4B); }
+.btn-secondary { color: #8ff4cb; border-color: rgba(0,168,98,.45); }
+.btn-secondary:hover { background: rgba(0,168,98,.12); }
+
+.card-title { color: #F5F7F8; }
+.card-price { color: #F5F7F8; font-size: 1.42rem; }
+.card-meta { color: #9AA4AE; }
+.card-trust { color: #C9D1D9; }

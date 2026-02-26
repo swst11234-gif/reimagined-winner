@@ -48,7 +48,7 @@ const state = {
   products: [],
   currentProduct: null,
   selectionById: {},
-  filters: { search: "", price: "all", category: "all", occasion: "", popularSize: null },
+  filters: { search: "", category: "all", occasion: "", popularSize: null },
   pendingMessage: "",
   wizard: { step: 0, answers: {}, finalMode: false },
   mix: { qty: 21, colors: ["white", "pink"], style: "florist_choice", wrapMode: "nowrap" },
@@ -68,7 +68,6 @@ const el = {
   emptyState: document.getElementById("empty-state"),
   searchInput: document.getElementById("search"),
   categorySelect: document.getElementById("category"),
-  priceButtons: document.querySelectorAll("[data-price]"),
   cardTemplate: document.getElementById("card-template"),
   occasionButtons: document.querySelectorAll("#occasions button"),
   occasionIndicator: document.getElementById("occasion-indicator"),
@@ -445,10 +444,11 @@ function renderOrderSummary() {
   const d = state.orderDraft;
   if (!d) return;
   el.orderSummaryList.innerHTML = `
-    <p><strong>Размер:</strong> ${d.qty} тюльпан${d.qty === 1 ? "" : "ов"}</p>
-    <p><strong>Цвет:</strong> ${getColorMeta(d.color).name}</p>
-    <p><strong>Упаковка:</strong> ${d.wrapMode === "wrap" ? "С крафтовой бумагой" : "Без"}</p>
-    <p><strong>Итоговая цена:</strong> ${formatPrice(d.price)}</p>
+    <div class="order-row"><span>Размер</span><strong>${d.qty} тюльпан${d.qty === 1 ? "" : "ов"}</strong></div>
+    <div class="order-row"><span>Цвет</span><strong>${getColorMeta(d.color).name.toLowerCase()}</strong></div>
+    <div class="order-row"><span>Упаковка</span><strong>${d.wrapMode === "wrap" ? "крафт" : "без"}</strong></div>
+    <div class="order-row order-row-total"><span>Цена</span><strong>${formatPrice(d.price)}</strong></div>
+    <hr class="order-divider" />
   `;
   el.orderDate.value = d.date || "";
   el.orderComment.value = d.comment || "";
@@ -540,11 +540,7 @@ function filteredProducts() {
     const inCategory = state.filters.category === "all" || p.category === state.filters.category;
     const inOccasion = occasionMatch(p);
     const inPopularSize = !state.filters.popularSize || productQty(p) === state.filters.popularSize;
-    let inPrice = true;
-    if (state.filters.price === "2000") inPrice = price <= 2000;
-    if (state.filters.price === "4000") inPrice = price <= 4000;
-    if (state.filters.price === "4000+") inPrice = price >= 4000;
-    return inSearch && inCategory && inOccasion && inPopularSize && inPrice;
+    return inSearch && inCategory && inOccasion && inPopularSize;
   });
 }
 
@@ -854,12 +850,6 @@ function bindEvents() {
     state.filters.category = e.target.value;
     renderCatalog();
   });
-  el.priceButtons.forEach((b) => b.addEventListener("click", () => {
-    el.priceButtons.forEach((x) => x.classList.remove("is-active"));
-    b.classList.add("is-active");
-    state.filters.price = b.dataset.price;
-    renderCatalog();
-  }));
 
   el.occasionButtons.forEach((b) => b.addEventListener("click", () => {
     el.occasionButtons.forEach((x) => x.classList.remove("is-active"));
