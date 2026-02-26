@@ -12,14 +12,14 @@
       "Под заказ"
     ],
     "qty": 1,
-    "imageBase": "assets/tulips/white/single_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/single_nowrap.svg",
-      "red": "assets/tulips/red/single_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/single_nowrap.svg",
-      "pink": "assets/tulips/pink/single_nowrap.svg",
-      "yellow": "assets/tulips/yellow/single_nowrap.svg",
-      "purple": "assets/tulips/purple/single_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -35,14 +35,14 @@
       "Под заказ"
     ],
     "qty": 7,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -58,14 +58,14 @@
       "Часто берут"
     ],
     "qty": 9,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -80,14 +80,14 @@
       "Под заказ"
     ],
     "qty": 13,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -102,14 +102,14 @@
       "Часто берут"
     ],
     "qty": 21,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -124,14 +124,14 @@
       "Популярно"
     ],
     "qty": 31,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -147,14 +147,14 @@
       "Под заказ"
     ],
     "qty": 51,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   },
   {
@@ -170,14 +170,14 @@
       "Под заказ"
     ],
     "qty": 101,
-    "imageBase": "assets/tulips/white/bq_nowrap.svg",
+    "imageBase": "docs/images/gallery/Base.jpg",
     "colorImages": {
-      "white": "assets/tulips/white/bq_nowrap.svg",
-      "red": "assets/tulips/red/bq_nowrap.svg",
-      "pink_center": "assets/tulips/pink_center/bq_nowrap.svg",
-      "pink": "assets/tulips/pink/bq_nowrap.svg",
-      "yellow": "assets/tulips/yellow/bq_nowrap.svg",
-      "purple": "assets/tulips/purple/bq_nowrap.svg"
+      "white": "docs/images/gallery/White.jpg",
+      "red": "docs/images/gallery/Red.jpg",
+      "pink_center": "docs/images/gallery/pinkwhite.jpg",
+      "pink": "docs/images/gallery/Pinky.jpg",
+      "yellow": "docs/images/gallery/Yellow.jpg",
+      "purple": "docs/images/gallery/Violet.jpg"
     }
   }
 ]
