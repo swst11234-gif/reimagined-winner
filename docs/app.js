@@ -447,7 +447,7 @@ function renderOrderSummary() {
     <div class="order-row"><span>Размер</span><strong>${d.qty} тюльпан${d.qty === 1 ? "" : "ов"}</strong></div>
     <div class="order-row"><span>Цвет</span><strong>${getColorMeta(d.color).name.toLowerCase()}</strong></div>
     <div class="order-row"><span>Упаковка</span><strong>${d.wrapMode === "wrap" ? "крафт" : "без"}</strong></div>
-    <div class="order-row order-row-total"><span>Цена</span><strong>${formatPrice(d.price)}</strong></div>
+    <div class="order-row order-row-total"><span>Цена</span><strong class="order-price-pill"><span class="order-price-value">${new Intl.NumberFormat("ru-RU").format(d.price)}</span> <span class="order-price-currency">₽</span></strong></div>
     <hr class="order-divider" />
   `;
   el.orderDate.value = d.date || "";
