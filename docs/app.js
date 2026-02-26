@@ -1,5 +1,5 @@
 const WRAP_ADDON = 200;
-const PLACEHOLDER_IMAGE = "assets/placeholder-1.svg";
+const PLACEHOLDER_IMAGE = "docs/images/gallery/Base.jpg";
 
 const CONFIG = {
   shopName: "Тюльпаны",
