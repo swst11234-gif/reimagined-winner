@@ -484,3 +484,10 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
   color: #F5F7F8;
   border: 1px solid rgba(255,255,255,.18);
 }
+
+/* Keep product modal sticky action area readable in dark theme */
+.ui-modal .sticky-order {
+  background: linear-gradient(to top, #111315 72%, rgba(17,19,21,.94));
+  border-top: 1px solid rgba(255,255,255,.10);
+  padding-top: .45rem;
+}
