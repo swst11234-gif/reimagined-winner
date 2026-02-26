@@ -36,7 +36,7 @@ const MIX_STYLES = [
   { key: "florist_choice", label: "Доверяю флористу", image: "assets/mix_examples/florist_choice.svg" },
 ];
 
-// Добавляйте реальные фото в docs/images/gallery/ и обновляйте этот список.
+// Чтобы включить галерею, добавьте 4–6 фото в /images/gallery и пропишите их в массиве GALLERY.
 const GALLERY = [
   { src: "images/gallery/work-1.svg", alt: "Букет 31 тюльпан, микс, крафт", caption: "31 • микс • крафт" },
   { src: "images/gallery/work-2.svg", alt: "Букет 21 тюльпан, белые, без упаковки", caption: "21 • белые • без" },
@@ -83,6 +83,7 @@ const el = {
   budgetRecommendations: document.getElementById("budget-recommendations"),
 
   galleryGrid: document.getElementById("gallery-grid"),
+  gallerySection: document.getElementById("gallery-section"),
 
   openWizard: document.getElementById("open-wizard"),
   openMix: document.getElementById("open-mix"),
@@ -226,7 +227,9 @@ function getCurrentPrice(product, selection) {
 }
 
 function resolveImage(product, selection) {
-  return product.images?.[selection.color]?.[selection.wrapMode] || PLACEHOLDER_IMAGE;
+  const base = product.imageBase || PLACEHOLDER_IMAGE;
+  const colorImage = product.colorImages?.[selection.color];
+  return colorImage || base;
 }
 
 function renderHeader() {
@@ -331,27 +334,43 @@ function renderBudgetColorOptions() {
   el.budgetColor.value = state.budget.color;
 }
 
-function renderGallery() {
-  if (!el.galleryGrid) return;
+async function renderGallery() {
+  if (!el.galleryGrid || !el.gallerySection) return;
+  if (!GALLERY.length) {
+    el.gallerySection.classList.add("hidden");
+    return;
+  }
+
+  const checks = await Promise.all(GALLERY.map((item) => new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = normalizeImagePath(item.src);
+  })));
+
+  const visibleItems = GALLERY.filter((_, idx) => checks[idx]);
+  if (!visibleItems.length) {
+    el.gallerySection.classList.add("hidden");
+    el.galleryGrid.innerHTML = "";
+    return;
+  }
+
+  el.gallerySection.classList.remove("hidden");
   el.galleryGrid.innerHTML = "";
-  GALLERY.forEach((item, index) => {
+  visibleItems.forEach((item, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "gallery-tile";
     button.innerHTML = `
       <div class="gallery-tile-media">
         <img src="${normalizeImagePath(item.src)}" alt="${item.alt}" loading="lazy" />
-        <div class="gallery-fallback hidden">Фото скоро появится</div>
       </div>
       <p class="gallery-tile-caption">${item.caption}</p>
     `;
-    const image = button.querySelector("img");
-    const fallback = button.querySelector(".gallery-fallback");
-    image.addEventListener("error", () => {
-      image.classList.add("hidden");
-      fallback.classList.remove("hidden");
+    button.addEventListener("click", () => {
+      state.galleryIndex = GALLERY.findIndex((x) => x.src === item.src);
+      openGalleryLightbox(state.galleryIndex);
     });
-    button.addEventListener("click", () => openGalleryLightbox(index));
     el.galleryGrid.appendChild(button);
   });
 }
@@ -535,17 +554,23 @@ function createCard(product) {
   const hint = frag.querySelector(".image-hint");
   const title = frag.querySelector(".card-title");
   const price = frag.querySelector(".card-price");
+  const colorBadge = frag.querySelector(".card-color-badge");
   const meta = frag.querySelector(".card-meta");
   const sizeBadge = frag.querySelector(".card-size-badge");
   const miniBadges = frag.querySelector(".card-mini-badges");
   const orderBtn = frag.querySelector(".card-order");
 
   const sel = getSelection(product.id);
+  const colorMeta = getColorMeta(sel.color);
   title.textContent = product.title;
   price.textContent = formatPrice(getCurrentPrice(product, sel));
+  colorBadge.textContent = `Цвет: ${colorMeta.name}`;
+  colorBadge.style.setProperty("--color-accent", colorMeta.swatch);
   meta.textContent = `${product.category} · ${sel.wrapMode === "wrap" ? "Крафт" : "Без упаковки"}`;
   sizeBadge.textContent = `${productQty(product)} шт`;
   miniBadges.innerHTML = cardBadges(product).map((tag) => `<span class="mini-badge">${tag}</span>`).join("");
+  const cardRoot = frag.querySelector(".card");
+  cardRoot?.style.setProperty("--color-accent", colorMeta.swatch);
   updateImageWithFade(img, hint, resolveImage(product, sel));
 
   orderBtn.addEventListener("click", () => {
@@ -574,7 +599,7 @@ function renderOccasionIndicator() {
     return;
   }
   el.occasionIndicator.classList.remove("hidden");
-  el.occasionIndicator.innerHTML = `Показано для: <strong>${map[state.filters.occasion]}</strong> <button id="occasion-reset" type="button">Сбросить</button>`;
+  el.occasionIndicator.innerHTML = `<span class="occasion-selected">Выбрано: ${map[state.filters.occasion]}</span> <button id="occasion-reset" class="btn btn-secondary btn-reset" type="button">Сбросить</button>`;
   el.occasionIndicator.querySelector("#occasion-reset").addEventListener("click", () => {
     state.filters.occasion = "";
     el.occasionButtons.forEach((b) => b.classList.remove("is-active"));
@@ -1004,7 +1029,7 @@ async function init() {
     renderPopularSizeIndicator();
     renderBudgetColorOptions();
     renderBudgetRecommendations();
-    renderGallery();
+    await renderGallery();
     renderMix();
   } catch {
     el.catalogGrid.innerHTML = "<p class='empty-state'>Не удалось загрузить каталог.</p>";
