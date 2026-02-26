@@ -491,3 +491,11 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
   border-top: 1px solid rgba(255,255,255,.10);
   padding-top: .45rem;
 }
+
+
+#product-modal #copy-button {
+  color: #0B0C0D;
+  background: #F5F7F8;
+  border-color: rgba(11,12,13,.2);
+}
+#product-modal #copy-button:hover { background: #E7ECEF; }
