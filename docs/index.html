@@ -219,15 +219,15 @@
 
     </main>
 
-    <dialog id="product-modal" class="product-modal">
-      <article>
+    <dialog id="product-modal" class="product-modal ui-overlay">
+      <article class="ui-modal">
         <button type="button" id="modal-close" class="modal-close" aria-label="Закрыть">×</button>
         <div class="modal-media-wrap"><img id="modal-image" class="modal-image img-fade" src="" alt="" /></div>
         <p id="modal-missing-hint" class="image-hint hidden">Фото временно отсутствует</p>
         <div class="modal-content">
           <p id="modal-category" class="eyebrow"></p>
           <h3 id="modal-title"></h3>
-          <p id="modal-price" class="modal-price"></p>
+          <p id="modal-price" class="modal-price ui-price"></p>
           <p id="modal-description"></p>
 
           <div class="picker-row">
@@ -251,10 +251,10 @@
       </article>
     </dialog>
 
-    <dialog id="wizard-modal" class="wizard-modal">
-      <article>
+    <dialog id="wizard-modal" class="wizard-modal ui-overlay">
+      <article class="ui-modal">
         <button type="button" id="wizard-close" class="modal-close" aria-label="Закрыть">×</button>
-        <div class="wizard-scroll">
+        <div class="wizard-scroll ui-modal__body">
           <h3>Пройдите короткий опрос — мы соберём букет специально для вас.</h3>
           <p id="wizard-progress" class="muted"></p>
           <div class="wizard-progress-bar"><span id="wizard-progress-bar-fill"></span></div>
@@ -285,10 +285,10 @@
       </article>
     </dialog>
 
-    <dialog id="mix-modal" class="wizard-modal">
-      <article>
+    <dialog id="mix-modal" class="wizard-modal ui-overlay">
+      <article class="ui-modal">
         <button type="button" id="mix-close" class="modal-close" aria-label="Закрыть">×</button>
-        <div class="wizard-scroll">
+        <div class="wizard-scroll ui-modal__body">
           <h3>Конструктор микс-букета</h3>
           <p class="muted">Соберём красивый микс в выбранной гамме. Точный вид может немного отличаться.</p>
 
@@ -324,18 +324,18 @@
           <div id="mix-summary" class="mix-summary"></div>
         </div>
 
-        <div class="wizard-sticky-actions">
+        <div class="wizard-sticky-actions ui-modal__footer">
           <button type="button" id="mix-order" class="btn btn-primary">Заказать микс</button>
         </div>
       </article>
     </dialog>
 
-    <dialog id="order-summary-modal" class="order-summary-modal">
-      <article>
+    <dialog id="order-summary-modal" class="order-summary-modal ui-overlay">
+      <article class="ui-modal">
         <button type="button" id="order-summary-close" class="modal-close" aria-label="Закрыть">×</button>
 
-        <div id="order-summary-step" class="wizard-scroll">
-          <h3>Ваш заказ</h3>
+        <div id="order-summary-step" class="wizard-scroll ui-modal__body">
+          <h3 class="ui-modal__header">Ваш заказ</h3>
           <p class="order-badge">Параметры</p>
           <div id="order-summary-list" class="order-summary-list"></div>
 
@@ -351,21 +351,21 @@
         </div>
 
         <div id="order-confirm-step" class="wizard-scroll hidden">
-          <h3>Заказ сформирован</h3>
+          <h3 class="ui-modal__header">Заказ сформирован</h3>
           <p class="muted">Ваш номер:</p>
           <p id="order-id" class="order-id"></p>
           <button type="button" id="order-id-copy" class="btn btn-secondary">Скопировать номер</button>
           <button type="button" id="order-copy-text" class="btn btn-secondary">Скопировать текст заказа</button>
           <textarea id="order-copy-fallback" class="copy-fallback hidden" rows="5" readonly aria-label="Текст заказа для копирования"></textarea>
           <p class="muted order-confirm-text">Выберите способ связи для отправки готового заказа:</p>
-          <div class="messenger-actions">
+          <div class="messenger-actions ui-modal__footer-actions">
             <button type="button" id="order-telegram" class="btn btn-secondary">Telegram</button>
             <button type="button" id="order-whatsapp" class="btn btn-primary">WhatsApp</button>
             <button type="button" id="order-call" class="btn btn-secondary">Позвонить</button>
           </div>
         </div>
 
-        <div id="order-summary-actions" class="wizard-sticky-actions">
+        <div id="order-summary-actions" class="wizard-sticky-actions ui-modal__footer">
           <button type="button" id="order-edit" class="btn btn-secondary">Изменить</button>
           <button type="button" id="order-continue" class="btn btn-primary">Продолжить</button>
         </div>
@@ -377,11 +377,11 @@
       </article>
     </dialog>
 
-    <dialog id="messenger-modal" class="messenger-modal">
-      <article>
-        <h3 id="messenger-title">Связаться</h3>
+    <dialog id="messenger-modal" class="messenger-modal ui-overlay">
+      <article class="ui-modal">
+        <h3 class="ui-modal__header" id="messenger-title">Связаться</h3>
         <p id="messenger-description" class="muted"></p>
-        <div class="messenger-actions">
+        <div class="messenger-actions ui-modal__footer-actions">
           <button type="button" id="messenger-telegram" class="btn btn-secondary">Telegram</button>
           <button type="button" id="messenger-whatsapp" class="btn btn-primary">WhatsApp</button>
           <button type="button" id="messenger-call" class="btn btn-secondary">Позвонить</button>
@@ -390,8 +390,8 @@
       </article>
     </dialog>
 
-    <dialog id="gallery-lightbox" class="gallery-lightbox">
-      <article>
+    <dialog id="gallery-lightbox" class="gallery-lightbox ui-overlay">
+      <article class="ui-modal">
         <button type="button" id="gallery-close" class="modal-close" aria-label="Закрыть">×</button>
         <button type="button" id="gallery-prev" class="gallery-nav gallery-prev" aria-label="Предыдущее фото">‹</button>
         <figure class="gallery-figure">
