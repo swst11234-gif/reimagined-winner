@@ -648,3 +648,30 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
 #product-modal .modal-image {
   object-fit: cover;
 }
+
+
+/* Hard override: product order card image must visibly fill the frame */
+#product-modal.ui-overlay .ui-modal {
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: min(92vh, 100dvh) !important;
+}
+#product-modal.ui-overlay .modal-media-wrap {
+  flex: 0 0 clamp(240px, 40vh, 360px) !important;
+  height: clamp(240px, 40vh, 360px) !important;
+  min-height: 220px !important;
+  overflow: hidden !important;
+  background: #0f1113 !important;
+}
+#product-modal.ui-overlay .modal-image {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+#product-modal.ui-overlay .modal-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto !important;
+}
