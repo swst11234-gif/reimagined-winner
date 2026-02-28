@@ -639,3 +639,12 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
   border-top: 1px solid rgba(255,255,255,.10);
   padding-top: .45rem;
 }
+
+
+/* Product modal image fill fix: remove side gaps, fill frame */
+#product-modal .modal-media-wrap {
+  overflow: hidden;
+}
+#product-modal .modal-image {
+  object-fit: cover;
+}
