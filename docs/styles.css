@@ -592,3 +592,14 @@ input, select, textarea { background: rgba(9, 14, 12, .82); color: var(--text); 
   border-top: 0;
   padding-bottom: 0;
 }
+
+
+/* Product modal image quality: show full photo without aggressive crop */
+#product-modal .modal-media-wrap {
+  height: clamp(150px, 26vh, 240px);
+  background: #0f1113;
+}
+#product-modal .modal-image {
+  object-fit: contain;
+  object-position: center;
+}
