@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const crypto = require("crypto");
 const { initDb } = require("./db");
 
 const ORDER_STATUSES = new Set([
@@ -17,17 +18,24 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+const ORDER_ID_PREFIX = "TLP-";
+const ORDER_ID_BYTES = 12;
+const MAX_ID_GENERATION_RETRIES = 5;
+
 function generateOrderId() {
-  return `TLP-${Math.floor(1000 + Math.random() * 9000)}`;
+  return `${ORDER_ID_PREFIX}${crypto.randomBytes(ORDER_ID_BYTES).toString("hex").toUpperCase()}`;
 }
 
 function generateUniqueOrderId() {
-  let id = generateOrderId();
   const exists = db.prepare("SELECT 1 FROM orders WHERE id = ?");
-  while (exists.get(id)) {
-    id = generateOrderId();
+  for (let attempt = 0; attempt < MAX_ID_GENERATION_RETRIES; attempt += 1) {
+    const id = generateOrderId();
+    if (!exists.get(id)) {
+      return id;
+    }
   }
-  return id;
+
+  throw new Error("Failed to generate a unique order ID");
 }
 
 function parseOrderRow(row) {
@@ -72,7 +80,12 @@ app.post("/api/orders", (req, res) => {
     return res.status(400).json({ error: "Payload must be a JSON object" });
   }
 
-  const id = generateUniqueOrderId();
+  let id;
+  try {
+    id = generateUniqueOrderId();
+  } catch {
+    return res.status(503).json({ error: "Could not generate order ID. Please retry." });
+  }
   const createdAt = new Date().toISOString();
   const status = "sent";
 
